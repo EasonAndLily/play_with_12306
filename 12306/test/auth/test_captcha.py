@@ -19,21 +19,18 @@ class TestCaptcha(TestCase):
 
     def test_get_captcha(self):
         image_data = Captcha.get_captcha()
-        self.assertIsNotNone(image_data["image"])
-        self.assertIsNotNone(image_data["image_id"])
-        self.assertTrue(is_base64(image_data["image"]))
+        self.assertIsNotNone(image_data)
+        self.assertTrue(is_base64(image_data))
 
     def test_save_captcha(self):
         import os
         file_path = os.path.dirname(os.path.abspath(__file__))
         Captcha.save_captcha(Captcha.get_captcha(), file_path + "/", "captcha.jpg")
         self.assertTrue(os.path.isfile('captcha.jpg'))
-        # from PIL import Image
-        # img = Image.open('captcha.jpg')
-        # img.show()
 
     def test_check_captcha(self):
-        image_data = Captcha.get_captcha()
+        Captcha.get_captcha()
         images_number = [2, 4, 6]
-        result = Captcha.check_captcha(images_number, image_data["image_id"])
-        self.assertFalse(result)
+        result = Captcha.check_captcha(images_number)
+        print result
+        self.assertFalse(result["is_successful"])
