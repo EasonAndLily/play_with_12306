@@ -63,7 +63,9 @@ class Captcha(object):
         return image_coordinate_str[1:]
 
     @classmethod
-    def run(cls):
+    def run(cls, session):
+        if session is not None:
+            cls.session = session
         image_data = Captcha.get_captcha()
         file_path = os.path.dirname(os.path.abspath(__file__))
         print file_path
@@ -86,7 +88,7 @@ class Captcha(object):
             print "Captcha check successfully!"
         else:
             print "Captcha check failed!"
-
+        return result
 
 if __name__ == '__main__':
-    Captcha.run()
+    Captcha.run(requests.session())

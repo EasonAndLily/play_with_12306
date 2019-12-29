@@ -3,6 +3,8 @@ from unittest import TestCase
 import sys
 import base64
 
+import requests
+
 sys.path.append('../../../12306')
 from core.auth.basic import BasicAuth
 
@@ -10,7 +12,7 @@ from core.auth.basic import BasicAuth
 class TestBasicAuth(TestCase):
 
     def test_login(self):
-        basic_auth = BasicAuth("15342349100", "232699ljh")
-        res = basic_auth.login()
-        print res.text
-        self.assertEqual(res.status_code, 200)
+        session = requests.session()
+        aut = BasicAuth(session, "test", "test", "35,35")
+        result = aut.login()
+        self.assertFalse(result["is_login"])
