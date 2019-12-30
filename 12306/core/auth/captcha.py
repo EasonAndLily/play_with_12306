@@ -90,5 +90,6 @@ class Captcha(object):
             print "Captcha check failed!"
         return result
 
+
 if __name__ == '__main__':
     Captcha.run(requests.session())
