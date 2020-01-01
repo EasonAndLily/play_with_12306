@@ -1,10 +1,6 @@
-import binascii
 from unittest import TestCase
 import sys
-import base64
-
 import requests
-
 sys.path.append('../../../12306')
 from core.auth.basic import BasicAuth
 
@@ -27,4 +23,4 @@ class TestBasicAuth(TestCase):
         TestBasicAuth.session.cookies = requests.utils.add_dict_to_cookiejar(TestBasicAuth.session.cookies, {
             "Cookie": "uamtk=szOraZkX5L7qqSCiRwE1fElVZafQ_GImvB8wf-87Ip4tyl1l0"})
         result = TestBasicAuth.aut.validate_apptk("MmngS7iLqTdAWwXSl-DBpxVO6DrrOyGg4tjoOU9jifA1pl1l0")
-        self.assertTrue(result["verify_successful"])
+        self.assertFalse(result["verify_successful"])
