@@ -2,6 +2,7 @@ import requests
 from captcha import Captcha
 import urllib3
 
+
 class BasicAuth(object):
 
     def __init__(self, session, username, password, answer):
@@ -28,8 +29,8 @@ class BasicAuth(object):
     def login(self):
         login_url = "https://kyfw.12306.cn/passport/web/login"
         self.__session.cookies = requests.utils.add_dict_to_cookiejar(self.__session.cookies, {
-            "Cookie": "RAIL_DEVICEID=BjIRSVVumHArn35g_X9jrAbQkR9pBaN34uNTTTeD30yzKjPy1Lw66hcxHssEad6Hj3MBSDuywDt6b0A31wvNwY5cYFzuEByjhSPreuHB36CgbIKVqYjSDP"
-                      "_kMer8MkXZrWtMJmJf-pbZDGylBUog-e3w2RNJB2es"})
+            "Cookie": "RAIL_DEVICEID=BjIRSVVumHArn35g_X9jrAbQkR9pBaN34uNTTTeD30yzKjPy1Lw66hcxHssEad6Hj3MBSDuywDt6"
+                      "b0A31wvNwY5cYFzuEByjhSPreuHB36CgbIKVqYjSDP_kMer8MkXZrWtMJmJf-pbZDGylBUog-e3w2RNJB2es"})
 
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         res = self.__session.post(login_url, data=self.__data, headers=self.__headers, verify=False)
@@ -52,7 +53,6 @@ class BasicAuth(object):
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         res = self.__session.post(url, data={"appid": "otn"}, headers=self.__headers, verify=False)
         res.encoding = "utf-8"
-        print res.text
         data = res.json()
         if data["result_code"] == 0:
             print "Get new apptk successfully!"
@@ -66,6 +66,23 @@ class BasicAuth(object):
                 "get_apptk_successful": False,
             }
 
+    def validate_apptk(self, newapptk):
+        url = "https://kyfw.12306.cn/otn/uamauthclient"
+        data = {'tk': newapptk}
+        res = self.__session.post(url, data=data)
+        res.encoding = "utf-8"
+        result = res.json()
+        if result['result_code'] == 0:
+            print "Apptk verify successfully!"
+            return {
+                "verify_successful": True,
+                "username": result["username"],
+                "apptk": result["apptk"]
+            }
+        else:
+            print "Apptk verify failed!"
+            return {"verify_successful": False}
+
 
 if __name__ == '__main__':
     session = requests.session()
@@ -73,6 +90,10 @@ if __name__ == '__main__':
     if result["is_successful"]:
         aut = BasicAuth(session, "test", "test", result["answer"])
         aut.login()
-        aut.get_apptk()
+        app_data = aut.get_apptk()
+        if app_data["get_apptk_successful"]:
+            verify_data = aut.validate_apptk(app_data["newapptk"])
+            if verify_data["verify_successful"]:
+                print verify_data["username"] + " login successfully!"
     else:
         print "Please check captcha again!"
