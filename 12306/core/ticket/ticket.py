@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 import requests
 
 
@@ -21,7 +22,8 @@ class Ticket(object):
 
     def query_left_tickets(self):
         basic_url = "https://kyfw.12306.cn/otn/leftTicket/queryZ?"
-        url = basic_url + "leftTicketDTO.train_date=" + self.__train_date + "&leftTicketDTO.from_station=" + self.__from_station + "&leftTicketDTO.to_station=" + self.__end_station + "&purpose_codes=ADULT"
+        url = basic_url + "leftTicketDTO.train_date=" + self.__train_date + "&leftTicketDTO.from_station=" + \
+              self.__from_station + "&leftTicketDTO.to_station=" + self.__end_station + "&purpose_codes=ADULT"
         session = requests.session()
         session.cookies = requests.utils.add_dict_to_cookiejar(session.cookies, {
             "Cookie": "tk=MmngS7iLqTdAWwXSl-DBpxVO6DrrOyGg4tjoOU9jifA1pl1l0; "
@@ -57,3 +59,9 @@ class Ticket(object):
                 result.update({"none_seat": info[26]})
                 tickets.append(result)
             return tickets
+
+    def can_book_specified_ticket(self, train_numbers, seat_info):
+        tickets = self.query_left_tickets()
+        specified_ticket = filter(lambda item: item["trains_number"] == train_numbers, tickets)
+        return len(specified_ticket) > 0 and specified_ticket[0][seat_info] != "" \
+               and specified_ticket[0][seat_info] != u"无"

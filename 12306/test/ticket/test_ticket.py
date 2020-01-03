@@ -29,3 +29,9 @@ class TestTicket(TestCase):
         self.assertEqual(left_tickets[0]["soft_seat"], "")
         self.assertIsNotNone(left_tickets[0]["hard_seat"])
         self.assertIsNotNone(left_tickets[0]["none_seat"])
+
+    def test_can_book_specified_ticket(self):
+        date = str(datetime.date.today() + datetime.timedelta(days=1))
+        ticket = Ticket("WHN", "DSJ", date)
+        result = ticket.can_book_specified_ticket("K226", "hard_sleeper")
+        self.assertFalse(result)
