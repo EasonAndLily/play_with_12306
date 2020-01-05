@@ -14,6 +14,7 @@ class TestTicket(TestCase):
         left_tickets = ticket.query_left_tickets()
         self.assertEqual(len(left_tickets), 4)
         self.assertEqual(left_tickets[0]["trains_number"], "K226")
+        self.assertIsNotNone(left_tickets[0]["train_secret"])
         self.assertEqual(left_tickets[0]["from_station"], u"武昌")
         self.assertEqual(left_tickets[0]["end_station"], u"定西")
         self.assertEqual(left_tickets[0]["start_time"], "09:46")

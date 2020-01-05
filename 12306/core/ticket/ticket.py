@@ -32,7 +32,6 @@ class Ticket(object):
                       "b0A31wvNwY5cYFzuEByjhSPreuHB36CgbIKVqYjSDP_kMer8MkXZrWtMJmJf-pbZDGylBUog-e3w2RNJB2es"})
 
         res = session.get(url, headers=self.__headers)
-        print res.text
         res.encoding = "utf-8"
         data = res.json()
         if data["httpstatus"] == 200:
@@ -42,6 +41,7 @@ class Ticket(object):
                 info = item.split("|")
                 result = dict()
                 result.update({"trains_number": info[3]})
+                result.update({"train_secret": info[0]})
                 result.update({"from_station": station_number_map[info[6]]})
                 result.update({"end_station": station_number_map[info[7]]})
                 result.update({"start_time": info[8]})
