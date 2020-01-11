@@ -5,9 +5,6 @@ import time
 class GenerateHeaders(object):
     @classmethod
     def get_headers(cls):
-        data = cls.get_rail_expiration_device_id()
-        cookie = "RAIL_EXPIRATION=" + data["RAIL_EXPIRATION"] + "; RAIL_DEVICEID=" + data["RAIL_DEVICEID"] + ";"
-
         return {
             "Accept": "application/json, text/javascript, */*; q=0.01",
             "Accept-Encoding": "gzip, deflate, br",
@@ -19,7 +16,6 @@ class GenerateHeaders(object):
             "Host": "kyfw.12306.cn",
             "Origin": "https://kyfw.12306.cn",
             "Referer": "https://kyfw.12306.cn/otn/resources/login.html",
-            "Cookie": cookie
         }
 
     @classmethod
