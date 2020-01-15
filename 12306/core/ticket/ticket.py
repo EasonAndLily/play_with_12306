@@ -20,17 +20,10 @@ class Ticket(object):
             "Referer": "https://kyfw.12306.cn/otn/resources/login.html",
         }
 
-    def query_left_tickets(self):
+    def query_left_tickets(self, session):
         basic_url = "https://kyfw.12306.cn/otn/leftTicket/queryZ?"
         url = basic_url + "leftTicketDTO.train_date=" + self.__train_date + "&leftTicketDTO.from_station=" + \
               self.__from_station + "&leftTicketDTO.to_station=" + self.__end_station + "&purpose_codes=ADULT"
-        session = requests.session()
-        session.cookies = requests.utils.add_dict_to_cookiejar(session.cookies, {
-            "Cookie": "tk=MmngS7iLqTdAWwXSl-DBpxVO6DrrOyGg4tjoOU9jifA1pl1l0; "
-                      "JSESSIONID=FD244CE9309EEE78801430055243CC66; "
-                      "RAIL_DEVICEID=BjIRSVVumHArn35g_X9jrAbQkR9pBaN34uNTTTeD30yzKjPy1Lw66hcxHssEad6Hj3MBSDuywDt6"
-                      "b0A31wvNwY5cYFzuEByjhSPreuHB36CgbIKVqYjSDP_kMer8MkXZrWtMJmJf-pbZDGylBUog-e3w2RNJB2es"})
-
         res = session.get(url, headers=self.__headers)
         res.encoding = "utf-8"
         data = res.json()
@@ -60,8 +53,13 @@ class Ticket(object):
                 tickets.append(result)
             return tickets
 
-    def can_book_specified_ticket(self, train_numbers, seat_info):
-        tickets = self.query_left_tickets()
+    def can_book_specified_ticket(self, session, train_numbers, seat_info):
+        tickets = self.query_left_tickets(session)
         specified_ticket = filter(lambda item: item["trains_number"] == train_numbers, tickets)
         return len(specified_ticket) > 0 and specified_ticket[0][seat_info] != "" \
                and specified_ticket[0][seat_info] != u"无"
+
+    def get_train_secret(self, session, train_numbers):
+        tickets = self.query_left_tickets(session)
+        specified_ticket = filter(lambda item: item["trains_number"] == train_numbers, tickets)
+        return specified_ticket[0]["train_secret"]

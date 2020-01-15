@@ -3,6 +3,8 @@ import datetime
 import sys
 from unittest import TestCase
 
+import requests
+
 sys.path.append('../../../12306')
 from core.ticket.ticket import Ticket
 
@@ -11,7 +13,7 @@ class TestTicket(TestCase):
     def test_query_left_tickets(self):
         date = str(datetime.date.today() + datetime.timedelta(days=1))
         ticket = Ticket("WHN", "DSJ", date)
-        left_tickets = ticket.query_left_tickets()
+        left_tickets = ticket.query_left_tickets(requests.session())
         self.assertEqual(len(left_tickets), 4)
         self.assertEqual(left_tickets[0]["trains_number"], "K226")
         self.assertIsNotNone(left_tickets[0]["train_secret"])
@@ -34,5 +36,5 @@ class TestTicket(TestCase):
     def test_can_book_specified_ticket(self):
         date = str(datetime.date.today() + datetime.timedelta(days=1))
         ticket = Ticket("WHN", "DSJ", date)
-        result = ticket.can_book_specified_ticket("K226", "hard_sleeper")
+        result = ticket.can_book_specified_ticket(requests.session(), "K226", "hard_sleeper")
         self.assertFalse(result)

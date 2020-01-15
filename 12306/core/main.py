@@ -3,6 +3,7 @@ import json
 import requests
 from auth.captcha import Captcha
 from auth.basic import BasicAuth
+from ticket.order import Order
 from tools.generate_headers import GenerateHeaders
 
 
@@ -26,16 +27,26 @@ def login(session, username, password):
         if app_data["get_apptk_successful"]:
             verify_data = aut.validate_apptk(app_data["newapptk"])
             if verify_data["verify_successful"]:
+                session.cookies = requests.utils.add_dict_to_cookiejar(session.cookies, {
+                    "Cookie": "tk=" + verify_data["apptk"] + ";"
+                })
                 print verify_data["username"] + " login successfully!"
-                return verify_data["apptk"]
+                return True
     else:
         print "Please check captcha again!"
+        return False
+
+
+def generate_order(session, train_data, from_station_name, to_station_name, train_number):
+    order = Order(train_data, from_station_name, to_station_name)
+    order.submit_order(session, train_number)
 
 
 if __name__ == '__main__':
     session = requests.session()
     handle_session(session)
     config = read_config()
-    apptk = login(session, config["username"], config["password"])
-    if apptk is not None:
-        print apptk
+    result = login(session, config["username"], config["password"])
+    if result:
+        generate_order(session, config["date"], config["from_station"], config["to_station"], config["train_number"])
+
