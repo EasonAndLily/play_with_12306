@@ -1,11 +1,7 @@
 import sys
-
-import requests
-from captcha import Captcha
 import urllib3
-
-sys.path.append('../tools')
-from generate_headers import GenerateHeaders
+sys.path.append('../../core')
+from tools.generate_headers import GenerateHeaders
 
 
 class BasicAuth(object):
@@ -22,9 +18,6 @@ class BasicAuth(object):
 
     def login(self):
         login_url = "https://kyfw.12306.cn/passport/web/login"
-        expiration_device = GenerateHeaders.get_rail_expiration_device_id()
-        self.__session.cookies = requests.utils.add_dict_to_cookiejar(self.__session.cookies, {
-            "Cookie": "RAIL_DEVICEID=" + expiration_device["RAIL_DEVICEID"]})
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         res = self.__session.post(login_url, data=self.__data, headers=self.__headers, verify=False)
         res.encoding = "utf-8"
@@ -76,18 +69,3 @@ class BasicAuth(object):
         else:
             print "Apptk verify failed!"
             return {"verify_successful": False}
-
-
-if __name__ == '__main__':
-    session = requests.session()
-    result = Captcha.run(session)
-    if result["is_successful"]:
-        aut = BasicAuth(session, "test", "test", result["answer"])
-        aut.login()
-        app_data = aut.get_apptk()
-        if app_data["get_apptk_successful"]:
-            verify_data = aut.validate_apptk(app_data["newapptk"])
-            if verify_data["verify_successful"]:
-                print verify_data["username"] + " login successfully!"
-    else:
-        print "Please check captcha again!"
