@@ -1,7 +1,20 @@
+import json
+
 import requests
 from auth.captcha import Captcha
 from auth.basic import BasicAuth
 from tools.generate_headers import GenerateHeaders
+
+
+def read_config():
+    with open("../../config/config.json", "r") as f:
+        return json.load(f)
+
+
+def handle_session(session):
+    expiration_device = GenerateHeaders.get_rail_expiration_device_id()
+    session.cookies = requests.utils.add_dict_to_cookiejar(session.cookies, {
+        "Cookie": "RAIL_DEVICEID=" + expiration_device["RAIL_DEVICEID"]})
 
 
 def login(session, username, password):
@@ -21,10 +34,8 @@ def login(session, username, password):
 
 if __name__ == '__main__':
     session = requests.session()
-    expiration_device = GenerateHeaders.get_rail_expiration_device_id()
-    session.cookies = requests.utils.add_dict_to_cookiejar(session.cookies, {
-        "Cookie": "RAIL_DEVICEID=" + expiration_device["RAIL_DEVICEID"]})
-
-    apptk = login(session, "test", "test")
+    handle_session(session)
+    config = read_config()
+    apptk = login(session, config["username"], config["password"])
     if apptk is not None:
         print apptk
