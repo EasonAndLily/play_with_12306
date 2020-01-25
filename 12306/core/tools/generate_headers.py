@@ -21,7 +21,7 @@ class GenerateHeaders(object):
     @classmethod
     def get_rail_expiration_device_id(cls):
         timestamp = int(round(time.time() * 1000))
-        url = "https://kyfw.12306.cn/otn/HttpZF/logdevice?algID=d7ccjkoUjy&hashCode=cEE3PDbRidMDM61j-OTbOYj-H6kBCoAhu_mDHrvT0VQ&FMQw=1&q4f3=en&VySQ=FGGaYCkR6vF4hcIljn2z5RvD7ZoZN5Vj&VPIf=1&custID=133&VEek=unknown&dzuS=0&yD16=0&EOQP=c227b88b01f5c513710d4b9f16a5ce52&jp76=52d67b2a5aa5e031084733d5006cc664&hAqN=MacIntel&platform=WEB&ks0Q=d22ca0b81584fbea62237b14bd04c866&TeRS=900x1440&tOHY=24xx900x1440&Fvje=i1l1o1s1&q5aJ=-8&wNLf=99115dfb07133750ba677d055874de87&0aew=Mozilla/5.0%20(Macintosh;%20Intel%20Mac%20OS%20X%2010_13_3)%20AppleWebKit/537.36%20(KHTML,%20like%20Gecko)%20Chrome/79.0.3945.88%20Safari/537.36&E3gR=57e9a4845965065fe3e7f8f81bfb501e&timestamp=" + str(
+        url = "https://kyfw.12306.cn/otn/HttpZF/logdevice?algID=4BbLmSosEH&hashCode=xm6v23GpXJkE8eByZcqL9cWy3Lqqz8s9NUbRG8hKnXE&FMQw=1&q4f3=en&VySQ=FGGaYCkR6vF4hcIljn2z5RvD7ZoZN5Vj&VPIf=1&custID=133&VEek=unknown&dzuS=0&yD16=0&EOQP=c227b88b01f5c513710d4b9f16a5ce52&jp76=52d67b2a5aa5e031084733d5006cc664&hAqN=MacIntel&platform=WEB&ks0Q=d22ca0b81584fbea62237b14bd04c866&TeRS=900x1440&tOHY=24xx900x1440&Fvje=i1l1o1s1&q5aJ=-8&wNLf=99115dfb07133750ba677d055874de87&0aew=Mozilla/5.0%20(Macintosh;%20Intel%20Mac%20OS%20X%2010_13_3)%20AppleWebKit/537.36%20(KHTML,%20like%20Gecko)%20Chrome/79.0.3945.88%20Safari/537.36&E3gR=57e9a4845965065fe3e7f8f81bfb501e&timestamp=" + str(
             timestamp)
         import requests
         res = requests.get(url)

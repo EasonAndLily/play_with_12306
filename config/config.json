@@ -1,8 +1,8 @@
 {
   "username": "test",
   "password": "test",
-  "date": "2020/02/15",
-  "train_number": "K622",
-  "from_station": "武昌",
-  "to_station": "兰州"
+  "date": "2020-02-19",
+  "train_number": "K1295",
+  "from_station": "银川",
+  "to_station": "武汉"
 }

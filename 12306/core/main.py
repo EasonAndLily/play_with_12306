@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 import json
 
 import requests
@@ -15,38 +16,43 @@ def read_config():
 def handle_session(session):
     expiration_device = GenerateHeaders.get_rail_expiration_device_id()
     session.cookies = requests.utils.add_dict_to_cookiejar(session.cookies, {
-        "Cookie": "RAIL_DEVICEID=" + expiration_device["RAIL_DEVICEID"]})
+        "Cookie": "RAIL_EXPIRATION=" + expiration_device["RAIL_EXPIRATION"] + ";RAIL_DEVICEID=" + expiration_device[
+            "RAIL_DEVICEID"] + ";"})
 
 
-def login(session, username, password):
-    result = Captcha.run(session)
-    if result["is_successful"]:
-        aut = BasicAuth(session, username, password, result["answer"])
-        aut.login()
-        app_data = aut.get_apptk()
-        if app_data["get_apptk_successful"]:
-            verify_data = aut.validate_apptk(app_data["newapptk"])
-            if verify_data["verify_successful"]:
-                session.cookies = requests.utils.add_dict_to_cookiejar(session.cookies, {
-                    "Cookie": "tk=" + verify_data["apptk"] + ";"
-                })
-                print verify_data["username"] + " login successfully!"
-                return True
+def login(answer, username, password):
+    aut = BasicAuth(session, username, password, answer)
+    aut.login()
+    app_data = aut.get_apptk()
+    if app_data["get_apptk_successful"]:
+        verify_data = aut.validate_apptk(app_data["newapptk"])
+        if verify_data["verify_successful"]:
+            session.cookies = requests.utils.add_dict_to_cookiejar(session.cookies, {
+                "Cookie": "tk=" + verify_data["apptk"] + ";"
+            })
+            print verify_data["username"] + " login successfully!"
+            return True
     else:
         print "Please check captcha again!"
         return False
 
 
-def generate_order(session, train_data, from_station_name, to_station_name, train_number):
-    order = Order(train_data, from_station_name, to_station_name)
+def generate_order(session, train_date, from_station_name, to_station_name, train_number):
+    print "Scheduling train " + train_number + " date is " + train_date
+    print "From: " + from_station_name
+    print "To: " + to_station_name
+    order = Order(train_date, from_station_name, to_station_name)
     order.submit_order(session, train_number)
 
 
 if __name__ == '__main__':
     session = requests.session()
-    handle_session(session)
     config = read_config()
-    result = login(session, config["username"], config["password"])
-    if result:
-        generate_order(session, config["date"], config["from_station"], config["to_station"], config["train_number"])
-
+    verify_captcha = Captcha.run(session)
+    if verify_captcha["is_successful"]:
+        handle_session(session)
+        config = read_config()
+        result = login(verify_captcha["answer"], config["username"], config["password"])
+        if result:
+            generate_order(session, config["date"], config["from_station"], config["to_station"],
+                           config["train_number"])
