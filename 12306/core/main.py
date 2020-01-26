@@ -15,9 +15,9 @@ def read_config():
 
 def handle_session(session):
     expiration_device = GenerateHeaders.get_rail_expiration_device_id()
-    session.cookies = requests.utils.add_dict_to_cookiejar(session.cookies, {
-        "Cookie": "RAIL_EXPIRATION=" + expiration_device["RAIL_EXPIRATION"] + ";RAIL_DEVICEID=" + expiration_device[
-            "RAIL_DEVICEID"] + ";"})
+    expiration = "RAIL_EXPIRATION=" + expiration_device["RAIL_EXPIRATION"] + ";"
+    deviceid = "RAIL_DEVICEID=" + expiration_device["RAIL_DEVICEID"] + ";"
+    session.cookies = requests.utils.add_dict_to_cookiejar(session.cookies, {"Cookie": expiration + deviceid})
 
 
 def login(answer, username, password):
@@ -42,7 +42,13 @@ def generate_order(session, train_date, from_station_name, to_station_name, trai
     print "From: " + from_station_name
     print "To: " + to_station_name
     order = Order(train_date, from_station_name, to_station_name)
-    order.submit_order(session, train_number)
+    result = order.submit_order(session, train_number)
+    if result["status"] and result['data'] == 'N':
+        print "submit order request successfully!"
+        return True
+    else:
+        print "submit order request failed!"
+        return False
 
 
 if __name__ == '__main__':

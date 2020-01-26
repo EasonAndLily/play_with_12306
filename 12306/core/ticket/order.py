@@ -31,6 +31,6 @@ class Order(object):
             "undefined": ""
         }
         url = "https://kyfw.12306.cn/otn/leftTicket/submitOrderRequest"
-        print secret
         res = session.post(url, data=data, headers=self.__headers)
         print res.text
+        return res.json()
