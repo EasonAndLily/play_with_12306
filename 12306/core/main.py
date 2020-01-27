@@ -6,6 +6,8 @@ from auth.captcha import Captcha
 from auth.basic import BasicAuth
 from ticket.order import Order
 from tools.generate_headers import GenerateHeaders
+from tools.init_dc import InitDc
+from auth.passenger import Passenger
 
 
 def read_config():
@@ -60,5 +62,11 @@ if __name__ == '__main__':
         config = read_config()
         result = login(verify_captcha["answer"], config["username"], config["password"])
         if result:
-            generate_order(session, config["date"], config["from_station"], config["to_station"],
-                           config["train_number"])
+            is_successfully = generate_order(session, config["date"], config["from_station"], config["to_station"],
+                                             config["train_number"])
+            if is_successfully:
+                params = InitDc.get_params(session)
+                passenger = Passenger(params["REPEAT_SUBMIT_TOKEN"])
+                passengers = passenger.get_passenger(session, config["passengers"])
+                print passengers[0]
+                print passengers[1]

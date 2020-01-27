@@ -4,13 +4,12 @@ import re
 
 class InitDc(object):
     @classmethod
-    def get_params(cls):
+    def get_params(cls, session):
         url = "https://kyfw.12306.cn/otn/confirmPassenger/initDc"
         data = {
             "_json_att": ""
         }
-        import requests
-        res = requests.post(url, data=data)
+        res = session.post(url, data=data)
         return cls.parse_html_data(res.text)
 
     @classmethod
