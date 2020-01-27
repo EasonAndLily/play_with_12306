@@ -53,6 +53,23 @@ def generate_order(session, train_date, from_station_name, to_station_name, trai
         return False
 
 
+def generate_init_params(session):
+    params = InitDc.get_params(session)
+    passengers = Passenger(params["REPEAT_SUBMIT_TOKEN"]).get_passenger(session, config["passengers"])
+    ticket_str = ""
+    passenger_str = ""
+    for passenger in passengers:
+        passenger_str += "" if passenger_str == "" else "_"
+        passenger_str += 'O,' + passenger['passenger_flag'] + ',' + passenger['passenger_type'] + ',' + passenger[
+            'passenger_name'] + ',' + passenger['passenger_id_type_code'] + ',' + passenger['passenger_id_no'] + ',' + \
+                         passenger['mobile_no'] + ',N' + passenger["allEncStr"]
+        ticket_str += passenger['passenger_name'] + ',' + passenger['passenger_id_type_code'] + ',' + passenger[
+            'passenger_id_no'] + ',1_'
+    params["passenger_str"] = passenger_str
+    params["ticket_str"] = ticket_str
+    return params
+
+
 if __name__ == '__main__':
     session = requests.session()
     config = read_config()
@@ -65,8 +82,6 @@ if __name__ == '__main__':
             is_successfully = generate_order(session, config["date"], config["from_station"], config["to_station"],
                                              config["train_number"])
             if is_successfully:
-                params = InitDc.get_params(session)
-                passenger = Passenger(params["REPEAT_SUBMIT_TOKEN"])
-                passengers = passenger.get_passenger(session, config["passengers"])
-                print passengers[0]
-                print passengers[1]
+                init_params = generate_init_params(session)
+                Order.check_order_info(session, init_params["passenger_str"], init_params["ticket_str"],
+                                       init_params["REPEAT_SUBMIT_TOKEN"])
