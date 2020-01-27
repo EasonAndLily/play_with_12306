@@ -1,4 +1,6 @@
 # -*- coding: UTF-8 -*-
+import time
+
 import requests
 
 
@@ -63,3 +65,29 @@ class Ticket(object):
         tickets = self.query_left_tickets(session)
         specified_ticket = filter(lambda item: item["trains_number"] == train_numbers, tickets)
         return specified_ticket[0]["train_secret"]
+
+    @staticmethod
+    def query_left_tickets_info(session, init_params, seat_type, train_date):
+        url = "https://kyfw.12306.cn/otn/confirmPassenger/getQueueCount"
+        params = {
+            "train_date": time.strftime("%a+%b+%d+%Y+00:00:00+GMT+0800",
+                                        time.strptime(train_date, "%Y-%m-%d")) + '+(中国标准时间)',
+            "train_no": init_params["train_no"],
+            "stationTrainCode": init_params["station_train_code"],
+            "seatType": seat_type,
+            "fromStationTelecode": init_params["from_station_telecode"],
+            "toStationTelecode": init_params["to_station"],
+            "leftTicket": init_params["leftTicketStr"],
+            "purpose_codes": init_params["purpose_codes"],
+            "train_location": init_params["train_location"],
+            "_json_att": "",
+            "REPEAT_SUBMIT_TOKEN": init_params["REPEAT_SUBMIT_TOKEN"]
+        }
+        res = session.post(url, data=params)
+        print res.text
+        result = res.json()
+        if result["status"]:
+            return {
+                "left_tickets": result["data"]["ticket"],
+                "queue_count": result["data"]["count"]
+            }

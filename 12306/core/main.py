@@ -8,6 +8,7 @@ from ticket.order import Order
 from tools.generate_headers import GenerateHeaders
 from tools.init_dc import InitDc
 from auth.passenger import Passenger
+from ticket.ticket import Ticket
 
 
 def read_config():
@@ -70,6 +71,17 @@ def generate_init_params(session):
     return params
 
 
+def can_order_left_tickets(session, init_params, config):
+    left_tickets_info = Ticket.query_left_tickets_info(session, init_params, config["seat_type"], config["date"])
+    if left_tickets_info is not None:
+        print "There are " + left_tickets_info["left_tickets"] + " tickets left for your current purchase seat type"
+        print "There are currently " + left_tickets_info["queue_count"] + " people in line"
+        return True
+    else:
+        print "No left tickets for this seat type..."
+        return False
+
+
 if __name__ == '__main__':
     session = requests.session()
     config = read_config()
@@ -85,3 +97,4 @@ if __name__ == '__main__':
                 init_params = generate_init_params(session)
                 Order.check_order_info(session, init_params["passenger_str"], init_params["ticket_str"],
                                        init_params["REPEAT_SUBMIT_TOKEN"])
+                can_order_left_tickets(session, init_params, config)
