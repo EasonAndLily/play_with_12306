@@ -1,7 +1,11 @@
 import json
-import os
-
 import requests
+import sys
+
+sys.path.append('../../core')
+from tools import verify_code
+from config import config
+from tools.utils import Utils
 
 
 class Captcha(object):
@@ -24,20 +28,33 @@ class Captcha(object):
             f.write(image_data)
 
     @classmethod
+    def verify_captcha_auto(cls, image):
+        answers = verify_code.verify(image)
+        return list(map(int, answers))
+
+    @classmethod
+    def verify_captcha_manual(cls, image):
+        Captcha.save_captcha(image, Utils.get_captcha_path(), Utils.get_captcha_name())
+        from PIL import Image
+        img = Image.open(Utils.get_captcha_path() + Utils.get_captcha_name())
+        img.show()
+        input_data = input("请输入符合的验证码图片序号(序号之间用英文逗号隔开，例如：3,8):")
+        image_numbers = []
+        if input_data.find(",") < 0:
+            image_numbers.append(input_data)
+        else:
+            image_numbers = input_data.split(",")
+        return list(map(int, image_numbers))
+
+    @classmethod
     def check_captcha(cls, image_indexes):
+        url = "https://kyfw.12306.cn/passport/captcha/captcha-check"
         params = {
-            "answer": cls.get_captcha_answer(image_indexes),
+            "answer": Utils.get_captcha_answer(image_indexes),
             "rand": "sjrand",
             "login_site": "E"
         }
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome'
-                          '/69.0.3497.100 Safari/537.36'
-        }
-
-        print "The image answers are: " + params["answer"]
-        res = cls.session.post("https://kyfw.12306.cn/passport/captcha/captcha-check", data=params, headers=headers,
-                               verify=False)
+        res = cls.session.post(url, data=params)
         is_successful = json.loads(res.text)["result_code"] == "4"
         return {
             "is_successful": is_successful,
@@ -45,49 +62,19 @@ class Captcha(object):
         }
 
     @classmethod
-    def get_captcha_answer(cls, image_numbers):
-        image_coordinate = {
-            1: "35,35",
-            2: "115,35",
-            3: "195,35",
-            4: "445,35",
-            5: "35,115",
-            6: "115,115",
-            7: "195,115",
-            8: "445,115"
-        }
-        image_coordinate_str = ""
-        for num in image_numbers:
-            image_coordinate_str += "," + image_coordinate.get(num)
-
-        return image_coordinate_str[1:]
-
-    @classmethod
     def run(cls, session):
         if session is not None:
             cls.session = session
-        image_data = Captcha.get_captcha()
-        file_path = os.path.dirname(os.path.abspath(__file__))
-        print file_path
-        Captcha.save_captcha(image_data, file_path + "/", "captcha.jpg")
-        from PIL import Image
-
-        img = Image.open(file_path + '/captcha.jpg')
-        img.show()
-        image_numbers = []
-        input_data = input("Please enter the right image indexes:")
-        if type(input_data) == int:
-            image_numbers.append(input_data)
-        else:
-            for number in input_data:
-                image_numbers.append(number)
-        print "The image index is: " + ",".join(str(x) for x in image_numbers)
+        image_data = cls.get_captcha()
+        image_numbers = Captcha.verify_captcha_auto(image_data) if config.CAPTCHA_IDENTIFY == 0 \
+            else cls.verify_captcha_manual(image_data)
+        print("输入的图片验证码序号为：" + ",".join(str(x) for x in image_numbers))
 
         result = Captcha.check_captcha(image_numbers)
         if result["is_successful"]:
-            print "Captcha check successfully!"
+            print("验证码认证成功！")
         else:
-            print "Captcha check failed!"
+            print("验证码认证失败！")
         return result
 
 
