@@ -56,6 +56,7 @@ def generate_order(session, train_date, from_station_name, to_station_name, trai
 
 def generate_init_params(session):
     params = InitDc.get_params(session)
+    print params["REPEAT_SUBMIT_TOKEN"]
     passengers = Passenger(params["REPEAT_SUBMIT_TOKEN"]).get_passenger(session, config["passengers"])
     ticket_str = ""
     passenger_str = ""
@@ -82,6 +83,14 @@ def can_order_left_tickets(session, init_params, config):
         return False
 
 
+def choose_seats(session, init_params, seats):
+    chose_seat = Ticket.choose_seat(session, init_params, seats)
+    if chose_seat:
+        print "Choose Seats successfully!"
+    else:
+        print "Choose Seats failed"
+
+
 if __name__ == '__main__':
     session = requests.session()
     config = read_config()
@@ -98,3 +107,4 @@ if __name__ == '__main__':
                 Order.check_order_info(session, init_params["passenger_str"], init_params["ticket_str"],
                                        init_params["REPEAT_SUBMIT_TOKEN"])
                 can_order_left_tickets(session, init_params, config)
+                choose_seats(session, init_params, "1A2B")

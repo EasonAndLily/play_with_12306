@@ -1,4 +1,6 @@
 # -*- coding: UTF-8 -*-
+import datetime
+import json
 import time
 
 import requests
@@ -70,8 +72,8 @@ class Ticket(object):
     def query_left_tickets_info(session, init_params, seat_type, train_date):
         url = "https://kyfw.12306.cn/otn/confirmPassenger/getQueueCount"
         params = {
-            "train_date": time.strftime("%a+%b+%d+%Y+00:00:00+GMT+0800",
-                                        time.strptime(train_date, "%Y-%m-%d")) + '+(中国标准时间)',
+            "train_date": datetime.datetime.strptime(train_date, '%Y-%m-%d').strftime(
+                "%a %b %d %Y %H:%M:%S GMT+0800 (中国标准时间)"),
             "train_no": init_params["train_no"],
             "stationTrainCode": init_params["station_train_code"],
             "seatType": seat_type,
@@ -83,6 +85,7 @@ class Ticket(object):
             "_json_att": "",
             "REPEAT_SUBMIT_TOKEN": init_params["REPEAT_SUBMIT_TOKEN"]
         }
+        print json.dumps(params, sort_keys=True, indent=4, separators=(',', ':'))
         res = session.post(url, data=params)
         print res.text
         result = res.json()
@@ -91,3 +94,27 @@ class Ticket(object):
                 "left_tickets": result["data"]["ticket"],
                 "queue_count": result["data"]["count"]
             }
+
+    @staticmethod
+    def choose_seat(session, init_params, choose_seats):
+        url = "https://kyfw.12306.cn/otn/confirmPassenger/confirmSingleForQueue"
+        params = {
+            "passengerTicketStr": init_params["passenger_str"],
+            "oldPassengerStr": init_params["ticket_str"],
+            "randCode": "",
+            "purpose_codes": init_params["purpose_codes"],
+            "key_check_isChange": init_params["key_check_isChange"],
+            "leftTicketStr": init_params["leftTicketStr"],
+            "train_location": init_params["train_location"],
+            "choose_seats": choose_seats,
+            "seatDetailType": 000,
+            "whatsSelect": 1,
+            "roomType": 00,
+            "dwAll": "N",
+            "_json_att": "",
+            "REPEAT_SUBMIT_TOKEN": init_params["REPEAT_SUBMIT_TOKEN"]
+        }
+        res = session.post(url, data=params)
+        print res.text
+        result = res.json()
+        return result["status"] and result["data"]["submitStatus"]
