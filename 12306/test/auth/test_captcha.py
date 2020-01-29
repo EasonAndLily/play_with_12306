@@ -16,14 +16,16 @@ def is_base64(s):
 
 
 class TestCaptcha(TestCase):
+    def setUp(self):
+        self.captcha = Captcha()
 
     def test_get_captcha(self):
-        image_data = Captcha.get_captcha()
+        image_data = self.captcha.get_captcha()
         self.assertIsNotNone(image_data)
         self.assertTrue(is_base64(image_data.encode()))
 
     def test_check_captcha(self):
-        image_data = Captcha.get_captcha()
+        image_data = self.captcha.get_captcha()
         answer = Captcha.verify_captcha_auto(image_data)
-        result = Captcha.check_captcha(answer)
+        result = self.captcha.check_captcha(answer)
         self.assertTrue(result["is_successful"])

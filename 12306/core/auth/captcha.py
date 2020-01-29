@@ -6,16 +6,45 @@ sys.path.append('../../core')
 from tools import verify_code
 from config import config
 from tools.utils import Utils
+from tools.api_request import API
 
 
 class Captcha(object):
-    session = requests.session()
+    def __init__(self):
+        self.__api = API()
+        self.__get_captcha_url = "https://kyfw.12306.cn/passport/captcha/captcha-image64"
+        self.__check_captcha_url = "https://kyfw.12306.cn/passport/captcha/captcha-check"
 
-    @classmethod
-    def get_captcha(cls):
-        res = cls.session.get("https://kyfw.12306.cn/passport/captcha/captcha-image64")
+    def get_captcha(self):
+        res = self.__api.get(self.__get_captcha_url)
         result = res.json()
         return result["image"]
+
+    def check_captcha(self, image_indexes):
+        params = {
+            "answer": Utils.get_captcha_answer(image_indexes),
+            "rand": "sjrand",
+            "login_site": "E"
+        }
+        res = self.__api.post(self.__check_captcha_url, data=params)
+        is_successful = json.loads(res.text)["result_code"] == "4"
+        return {
+            "is_successful": is_successful,
+            "answer": params["answer"]
+        }
+
+    def run(self):
+        image_data = self.get_captcha()
+        image_numbers = Captcha.verify_captcha_auto(image_data) if config.CAPTCHA_IDENTIFY == 0 \
+            else self.verify_captcha_manual(image_data)
+        print("输入的图片验证码序号为：" + ",".join(str(x) for x in image_numbers))
+
+        result = self.check_captcha(image_numbers)
+        if result["is_successful"]:
+            print("验证码认证成功！")
+        else:
+            print("验证码认证失败！")
+        return result
 
     @classmethod
     def verify_captcha_auto(cls, image):
@@ -36,37 +65,7 @@ class Captcha(object):
             image_numbers = input_data.split(",")
         return list(map(int, image_numbers))
 
-    @classmethod
-    def check_captcha(cls, image_indexes):
-        url = "https://kyfw.12306.cn/passport/captcha/captcha-check"
-        params = {
-            "answer": Utils.get_captcha_answer(image_indexes),
-            "rand": "sjrand",
-            "login_site": "E"
-        }
-        res = cls.session.post(url, data=params)
-        is_successful = json.loads(res.text)["result_code"] == "4"
-        return {
-            "is_successful": is_successful,
-            "answer": params["answer"]
-        }
-
-    @classmethod
-    def run(cls, session):
-        if session is not None:
-            cls.session = session
-        image_data = cls.get_captcha()
-        image_numbers = Captcha.verify_captcha_auto(image_data) if config.CAPTCHA_IDENTIFY == 0 \
-            else cls.verify_captcha_manual(image_data)
-        print("输入的图片验证码序号为：" + ",".join(str(x) for x in image_numbers))
-
-        result = Captcha.check_captcha(image_numbers)
-        if result["is_successful"]:
-            print("验证码认证成功！")
-        else:
-            print("验证码认证失败！")
-        return result
-
 
 if __name__ == '__main__':
-    Captcha.run(requests.session())
+    captcha = Captcha()
+    captcha.run()
