@@ -5,6 +5,7 @@ from unittest import TestCase
 
 sys.path.append('../../../12306')
 from core.auth.captcha import Captcha
+from core.tools.utils import Utils
 
 
 def is_base64(s):
@@ -26,6 +27,7 @@ class TestCaptcha(TestCase):
 
     def test_check_captcha(self):
         image_data = self.captcha.get_captcha()
-        answer = Captcha.verify_captcha_auto(image_data)
+        image_indexes = Captcha.verify_captcha_auto(image_data)
+        answer = Utils.get_captcha_answer(image_indexes)
         result = self.captcha.check_captcha(answer)
-        self.assertTrue(result["is_successful"])
+        self.assertTrue(result)
