@@ -18,20 +18,13 @@ class Captcha(object):
         return result["image"]
 
     @classmethod
-    def save_captcha(cls, image, path, file_name):
-        import base64
-        image_data = base64.b64decode(image)
-        with open(path + file_name, 'wb') as f:
-            f.write(image_data)
-
-    @classmethod
     def verify_captcha_auto(cls, image):
         answers = verify_code.verify(image)
         return list(map(int, answers))
 
     @classmethod
     def verify_captcha_manual(cls, image):
-        Captcha.save_captcha(image, Utils.get_captcha_path(), Utils.get_captcha_name())
+        Utils.save_captcha(image, Utils.get_captcha_path(), Utils.get_captcha_name())
         from PIL import Image
         img = Image.open(Utils.get_captcha_path() + Utils.get_captcha_name())
         img.show()

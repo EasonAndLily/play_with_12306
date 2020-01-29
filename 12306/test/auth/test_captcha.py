@@ -22,12 +22,6 @@ class TestCaptcha(TestCase):
         self.assertIsNotNone(image_data)
         self.assertTrue(is_base64(image_data.encode()))
 
-    def test_save_captcha(self):
-        import os
-        file_path = os.path.dirname(os.path.abspath(__file__))
-        Captcha.save_captcha(Captcha.get_captcha(), file_path + "/", "captcha.jpg")
-        self.assertTrue(os.path.isfile('captcha.jpg'))
-
     def test_check_captcha(self):
         Captcha.get_captcha()
         images_number = [2, 4, 6]

@@ -37,3 +37,10 @@ class Utils(object):
         image_coordinate = cls.get_image_coordinate()
         answers = list(map(lambda num : image_coordinate.get(num), image_numbers))
         return ",".join(answers)
+
+    @classmethod
+    def save_captcha(cls, image, path, file_name):
+        import base64
+        image_data = base64.b64decode(image)
+        with open(path + file_name, 'wb') as f:
+            f.write(image_data)
