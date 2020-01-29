@@ -23,7 +23,7 @@ class TestCaptcha(TestCase):
         self.assertTrue(is_base64(image_data.encode()))
 
     def test_check_captcha(self):
-        Captcha.get_captcha()
-        images_number = [2, 4, 6]
-        result = Captcha.check_captcha(images_number)
-        self.assertFalse(result["is_successful"])
+        image_data = Captcha.get_captcha()
+        answer = Captcha.verify_captcha_auto(image_data)
+        result = Captcha.check_captcha(answer)
+        self.assertTrue(result["is_successful"])
