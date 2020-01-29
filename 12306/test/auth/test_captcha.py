@@ -9,7 +9,7 @@ from core.auth.captcha import Captcha
 
 def is_base64(s):
     try:
-        base64.decodestring(s)
+        base64.decodebytes(s)
         return True
     except binascii.Error:
         return False
@@ -20,7 +20,7 @@ class TestCaptcha(TestCase):
     def test_get_captcha(self):
         image_data = Captcha.get_captcha()
         self.assertIsNotNone(image_data)
-        self.assertTrue(is_base64(image_data))
+        self.assertTrue(is_base64(image_data.encode()))
 
     def test_save_captcha(self):
         import os
@@ -32,5 +32,4 @@ class TestCaptcha(TestCase):
         Captcha.get_captcha()
         images_number = [2, 4, 6]
         result = Captcha.check_captcha(images_number)
-        print result
         self.assertFalse(result["is_successful"])

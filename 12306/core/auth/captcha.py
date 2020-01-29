@@ -14,11 +14,8 @@ class Captcha(object):
     @classmethod
     def get_captcha(cls):
         res = cls.session.get("https://kyfw.12306.cn/passport/captcha/captcha-image64")
-        origin_data = res.text
-        start = origin_data.find('{')
-        end = origin_data.find('}')
-        data = json.loads(origin_data[start: end + 1])
-        return data['image']
+        result = res.json()
+        return result["image"]
 
     @classmethod
     def save_captcha(cls, image, path, file_name):
