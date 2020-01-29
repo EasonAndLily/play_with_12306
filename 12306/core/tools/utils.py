@@ -35,7 +35,7 @@ class Utils(object):
     @classmethod
     def get_captcha_answer(cls, image_numbers):
         image_coordinate = cls.get_image_coordinate()
-        answers = list(map(lambda num : image_coordinate.get(num), image_numbers))
+        answers = list(map(lambda num: image_coordinate.get(num), image_numbers))
         return ",".join(answers)
 
     @classmethod

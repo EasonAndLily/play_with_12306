@@ -11,6 +11,7 @@ __pycache__/
 .Python
 build/
 config/config.json
+config/captcha.jpg
 12306/core/auth/captcha.jpg
 develop-eggs/
 dist/
