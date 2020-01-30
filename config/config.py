@@ -19,3 +19,6 @@ TRAIN_DATA = "2020-02-27"
 
 # 列车号
 TRAIN_NUMBER = "G101"
+
+# 乘车人 例如：["张三","李四"]
+PASSENGERS = ["李景华"]

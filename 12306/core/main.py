@@ -6,11 +6,11 @@ from auth.captcha import Captcha
 from auth.basic import BasicAuth
 from config import config
 from ticket.order import Order
+from tools.init_dc import InitDc
+from auth.passenger import Passenger
 
 
 # from tools.generate_headers import GenerateHeaders
-# from tools.init_dc import InitDc
-# from auth.passenger import Passenger
 # from ticket.ticket import Ticket
 
 
@@ -29,6 +29,9 @@ def generate_order():
     print("终点车站为：" + config.END_STATION)
     order = Order()
     order.submit_order()
+    init_params = InitDc.get_params()
+    passengers = Passenger.get_passenger(init_params["REPEAT_SUBMIT_TOKEN"])
+    print(passengers)
 
 
 # def generate_init_params(session):
