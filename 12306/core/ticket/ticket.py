@@ -60,7 +60,7 @@ class Ticket(object):
 
     def get_train_secret(self, train_numbers):
         tickets = self.query_left_tickets()
-        specified_ticket = filter(lambda item: item["trains_number"] == train_numbers, tickets)
+        specified_ticket = list(filter(lambda item: item["trains_number"] == train_numbers, tickets))
         return specified_ticket[0]["train_secret"]
 
     @staticmethod

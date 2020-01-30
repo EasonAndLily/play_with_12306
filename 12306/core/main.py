@@ -4,7 +4,10 @@ import json
 import requests
 from auth.captcha import Captcha
 from auth.basic import BasicAuth
-# from ticket.order import Order
+from config import config
+from ticket.order import Order
+
+
 # from tools.generate_headers import GenerateHeaders
 # from tools.init_dc import InitDc
 # from auth.passenger import Passenger
@@ -20,18 +23,12 @@ def login():
     aut.validate_apptk(app_data)
 
 
-# def generate_order(session, train_date, from_station_name, to_station_name, train_number):
-#     print "Scheduling train " + train_number + " date is " + train_date
-#     print "From: " + from_station_name
-#     print "To: " + to_station_name
-#     order = Order(train_date, from_station_name, to_station_name)
-#     result = order.submit_order(session, train_number)
-#     if result["status"] and result['data'] == 'N':
-#         print "submit order request successfully!"
-#         return True
-#     else:
-#         print "submit order request failed!"
-#         return False
+def generate_order():
+    print("您预订的车次为：" + config.TRAIN_NUMBER + " 预订时间为：" + config.TRAIN_DATA)
+    print("出发车站为：" + config.FROM_STATION)
+    print("终点车站为：" + config.END_STATION)
+    order = Order()
+    order.submit_order()
 
 
 # def generate_init_params(session):
@@ -73,3 +70,4 @@ def login():
 
 if __name__ == '__main__':
     login()
+    generate_order()
