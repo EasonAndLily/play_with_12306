@@ -1,15 +1,17 @@
 # -*- coding: UTF-8 -*-
 import re
 
+from .api_request import api
+
 
 class InitDc(object):
     @classmethod
-    def get_params(cls, session):
+    def get_params(cls):
         url = "https://kyfw.12306.cn/otn/confirmPassenger/initDc"
         data = {
             "_json_att": ""
         }
-        res = session.post(url, data=data)
+        res = api.post(url, data=data)
         return cls.parse_html_data(res.text)
 
     @classmethod
