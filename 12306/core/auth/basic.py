@@ -32,7 +32,6 @@ class BasicAuth(object):
             sys.exit(0)
 
     def get_apptk(self):
-        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         res = api.post(self.__get_apptk_url, data={"appid": "otn"})
         data = res.json()
         if data["result_code"] == 0:
@@ -47,8 +46,8 @@ class BasicAuth(object):
         res = api.post(self.__validate_apptk_url, data=data)
         result = res.json()
         if result['result_code'] == 0:
-            print("认证apptk成功！")
+            print("apptk认证成功！")
             return result["apptk"]
         else:
-            print("认证apptk失败！系统自动退出....")
+            print("apptk认证失败！系统自动退出....")
             sys.exit(0)
