@@ -1,3 +1,4 @@
+import os
 import sys
 from unittest import TestCase
 
@@ -22,3 +23,14 @@ class TestUtils(TestCase):
     def test_get_root_path(self):
         root_path = Utils.get_root_path()
         root_path.endswith("play_with_12306")
+
+    def test_save_json_data_to_file(self):
+        stations = {'VAP': '北京北', 'BOP': '北京东', 'BJP': '北京', 'VNP': '北京南', 'BXP': '北京西', 'IZQ': '广州南', 'CUW': '重庆北',
+                    'CQW': '重庆', 'CRW': '重庆南', 'CXW': '重庆西', 'GGQ': '广州东', 'SHH': '上海', 'SNH': '上海南', 'AOH': '上海虹桥',
+                    'SXH': '上海西'}
+        Utils.save_json_data_to_file(stations, "./", "stations.json")
+        self.assertTrue(os.path.exists("stations.json"))
+
+    def test_get_json_data_from_file(self):
+        data = Utils.get_json_data_from_file("./", "stations.json")
+        self.assertEqual("北京北", data["VAP"])

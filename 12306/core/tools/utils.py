@@ -1,4 +1,5 @@
 # coding:utf-8
+import json
 import os
 
 
@@ -44,3 +45,15 @@ class Utils(object):
         image_data = base64.b64decode(image)
         with open(path + file_name, 'wb') as f:
             f.write(image_data)
+
+    @classmethod
+    def save_json_data_to_file(cls, json_data, file_path, file_name):
+        path = os.path.join(file_path, file_name)
+        with open(path, 'w') as outfile:
+            json.dump(json_data, outfile)
+
+    @classmethod
+    def get_json_data_from_file(cls, file_path, file_name):
+        path = os.path.join(file_path, file_name)
+        with open(path) as json_file:
+            return json.load(json_file)
