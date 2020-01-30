@@ -12,8 +12,6 @@ class API(object):
         expiration_device = GenerateHeaders.get_rail_expiration_device_id()
         self.__cookie.save_cookie(RAIL_EXPIRATION=expiration_device["RAIL_EXPIRATION"],
                                   RAIL_DEVICEID=expiration_device["RAIL_DEVICEID"])
-        self.__session.cookies = requests.utils.add_dict_to_cookiejar(self.__session.cookies, {
-            "Cookie": expiration_device["RAIL_EXPIRATION"] + ";" + expiration_device["RAIL_DEVICEID"] + ";"})
 
     def get(self, url):
         self.__cookie.load_cookie(self.__session)
@@ -42,4 +40,5 @@ class API(object):
             print(e)
 
 
+# singleton pattern
 api = API()
