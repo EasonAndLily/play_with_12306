@@ -8,4 +8,12 @@ USERNAME = "test"
 # 12306登陆用户的密码
 PASSWORD = "test"
 
+# 出发车站
+FROM_STATION = "北京"
+
+# 到达车站
+END_STATION = "上海"
+
+# 出发日期
+TRAIN_DATA = "2020-02-27"
 

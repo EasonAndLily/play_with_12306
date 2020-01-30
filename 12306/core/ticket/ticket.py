@@ -1,70 +1,65 @@
 # -*- coding: UTF-8 -*-
 import datetime
 import json
-import time
-
 import requests
+import sys
+
+sys.path.append('../../core')
+from config import config
+from tools.api_request import api
+from tools.station import Station
 
 
 class Ticket(object):
-    def __init__(self, from_station, end_station, train_date):
-        self.__from_station = from_station
-        self.__end_station = end_station
-        self.__train_date = train_date
-        self.__headers = {
-            "Accept": "application/json, text/javascript, */*; q=0.01",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Accept-Language": "zh-CN,zh;q=0.9",
-            "Connection": "keep-alive",
-            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
-                          'Chrome/69.0.3497.100 Safari/537.36',
-            "Host": "kyfw.12306.cn",
-            "Origin": "https://kyfw.12306.cn",
-            "Referer": "https://kyfw.12306.cn/otn/resources/login.html",
-        }
+    def __init__(self):
+        self.__station = Station()
+        self.__from_station = self.__station.get_station_key_by_values(config.FROM_STATION)
+        self.__end_station = self.__station.get_station_key_by_values(config.END_STATION)
+        self.__train_date = config.TRAIN_DATA
+        self.__query_left_tickets_url = "https://kyfw.12306.cn/otn/leftTicket/queryZ"
 
-    def query_left_tickets(self, session):
-        basic_url = "https://kyfw.12306.cn/otn/leftTicket/queryZ?"
-        url = basic_url + "leftTicketDTO.train_date=" + self.__train_date + "&leftTicketDTO.from_station=" + \
+    def query_left_tickets(self):
+        url = self.__query_left_tickets_url + "?leftTicketDTO.train_date=" + self.__train_date + "&leftTicketDTO.from_station=" + \
               self.__from_station + "&leftTicketDTO.to_station=" + self.__end_station + "&purpose_codes=ADULT"
-        res = session.get(url, headers=self.__headers)
-        res.encoding = "utf-8"
+        res = api.get(url)
         data = res.json()
         if data["httpstatus"] == 200:
-            tickets = []
-            station_number_map = data["data"]["map"]
-            for item in data["data"]["result"]:
-                info = item.split("|")
-                result = dict()
-                result.update({"trains_number": info[3]})
-                result.update({"train_secret": requests.utils.unquote(info[0])})
-                result.update({"from_station": station_number_map[info[6]]})
-                result.update({"end_station": station_number_map[info[7]]})
-                result.update({"start_time": info[8]})
-                result.update({"arrive_time": info[9]})
-                result.update({"duration": info[10]})
-                result.update({"business_class": info[32] or info[25]})
-                result.update({"first_class": info[31]})
-                result.update({"second_class": info[30]})
-                result.update({"advance_soft_sleeper": info[21]})
-                result.update({"bullet_train_sleeper": info[27]})
-                result.update({"soft_sleeper": info[23]})
-                result.update({"hard_sleeper": info[28]})
-                result.update({"soft_seat": info[24]})
-                result.update({"hard_seat": info[29]})
-                result.update({"none_seat": info[26]})
-                tickets.append(result)
-            return tickets
+            return self.parse_string_array_to_tickets(data["data"]["result"], data["data"]["map"])
 
-    def can_book_specified_ticket(self, session, train_numbers, seat_info):
-        tickets = self.query_left_tickets(session)
-        specified_ticket = filter(lambda item: item["trains_number"] == train_numbers, tickets)
+    @classmethod
+    def parse_string_array_to_tickets(cls, data, station_map):
+        tickets = []
+        for item in data:
+            info = item.split("|")
+            result = dict()
+            result.update({"trains_number": info[3]})
+            result.update({"train_secret": requests.utils.unquote(info[0])})
+            result.update({"from_station": station_map[info[6]]})
+            result.update({"end_station": station_map[info[7]]})
+            result.update({"start_time": info[8]})
+            result.update({"arrive_time": info[9]})
+            result.update({"duration": info[10]})
+            result.update({"business_class": info[32] or info[25]})
+            result.update({"first_class": info[31]})
+            result.update({"second_class": info[30]})
+            result.update({"advance_soft_sleeper": info[21]})
+            result.update({"bullet_train_sleeper": info[27]})
+            result.update({"soft_sleeper": info[23]})
+            result.update({"hard_sleeper": info[28]})
+            result.update({"soft_seat": info[24]})
+            result.update({"hard_seat": info[29]})
+            result.update({"none_seat": info[26]})
+            tickets.append(result)
+        return tickets
+
+    def can_book_specified_ticket(self, train_numbers, seat_info):
+        tickets = self.query_left_tickets()
+        specified_ticket = list(filter(lambda item: item["trains_number"] == train_numbers, tickets))
         return len(specified_ticket) > 0 and specified_ticket[0][seat_info] != "" \
                and specified_ticket[0][seat_info] != u"无"
 
-    def get_train_secret(self, session, train_numbers):
-        tickets = self.query_left_tickets(session)
+    def get_train_secret(self, train_numbers):
+        tickets = self.query_left_tickets()
         specified_ticket = filter(lambda item: item["trains_number"] == train_numbers, tickets)
         return specified_ticket[0]["train_secret"]
 
@@ -85,9 +80,11 @@ class Ticket(object):
             "_json_att": "",
             "REPEAT_SUBMIT_TOKEN": init_params["REPEAT_SUBMIT_TOKEN"]
         }
-        print json.dumps(params, sort_keys=True, indent=4, separators=(',', ':'))
+        print
+        json.dumps(params, sort_keys=True, indent=4, separators=(',', ':'))
         res = session.post(url, data=params)
-        print res.text
+        print
+        res.text
         result = res.json()
         if result["status"]:
             return {
@@ -115,6 +112,7 @@ class Ticket(object):
             "REPEAT_SUBMIT_TOKEN": init_params["REPEAT_SUBMIT_TOKEN"]
         }
         res = session.post(url, data=params)
-        print res.text
+        print
+        res.text
         result = res.json()
         return result["status"] and result["data"]["submitStatus"]
