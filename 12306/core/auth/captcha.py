@@ -4,17 +4,16 @@ sys.path.append('../../core')
 from tools import verify_code
 from config import config
 from tools.utils import Utils
-from tools.api_request import API
+from tools.api_request import api
 
 
 class Captcha(object):
     def __init__(self):
-        self.__api = API()
         self.__get_captcha_url = "https://kyfw.12306.cn/passport/captcha/captcha-image64"
         self.__check_captcha_url = "https://kyfw.12306.cn/passport/captcha/captcha-check"
 
     def get_captcha(self):
-        res = self.__api.get(self.__get_captcha_url)
+        res = api.get(self.__get_captcha_url)
         result = res.json()
         return result["image"]
 
@@ -24,7 +23,7 @@ class Captcha(object):
             "rand": "sjrand",
             "login_site": "E"
         }
-        res = self.__api.post(self.__check_captcha_url, data=params)
+        res = api.post(self.__check_captcha_url, data=params)
         return res.json()["result_code"] == "4"
 
     def run(self):

@@ -1,71 +1,54 @@
 import sys
 import urllib3
+
 sys.path.append('../../core')
-from tools.generate_headers import GenerateHeaders
+from config import config
+from tools.api_request import api
 
 
 class BasicAuth(object):
-
-    def __init__(self, session, username, password, answer):
-        self.__data = {
-            "username": username,
-            "password": password,
-            "appid": "otn",
-            "answer": answer
-        }
-        self.__session = session
-        self.__headers = GenerateHeaders.get_headers()
+    def __init__(self, answer):
+        self.__username = config.USERNAME
+        self.__password = config.PASSWORD
+        self.__answer = answer
+        self.__login_url = "https://kyfw.12306.cn/passport/web/login"
+        self.__get_apptk_url = "https://kyfw.12306.cn/passport/web/auth/uamtk"
+        self.__validate_apptk_url = "https://kyfw.12306.cn/otn/uamauthclient"
 
     def login(self):
-        login_url = "https://kyfw.12306.cn/passport/web/login"
-        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        res = self.__session.post(login_url, data=self.__data, headers=self.__headers, verify=False)
-        res.encoding = "utf-8"
-        print res.text
-        data = res.json()
+        data = {
+            "username": self.__username,
+            "password": self.__password,
+            "appid": "otn",
+            "answer": self.__answer
+        }
+        response = api.post(self.__login_url, data=data)
+        data = response.json()
         if data["result_code"] == 0:
-            print "Login successfully!"
-            return {
-                "is_login": True,
-                "uamtk": data["uamtk"]
-            }
+            print("用户" + config.USERNAME + "登陆成功!")
+            return data["uamtk"]
         else:
-            print "Login failed!"
-            return {
-                "is_login": False
-            }
+            print("用户" + config.USERNAME + "登陆失败！系统自动退出...")
+            sys.exit(0)
 
     def get_apptk(self):
-        url = "https://kyfw.12306.cn/passport/web/auth/uamtk"
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        res = self.__session.post(url, data={"appid": "otn"}, headers=self.__headers, verify=False)
-        res.encoding = "utf-8"
+        res = api.post(self.__get_apptk_url, data={"appid": "otn"})
         data = res.json()
         if data["result_code"] == 0:
-            print "Get new apptk successfully!"
-            return {
-                "get_apptk_successful": True,
-                "newapptk": data["newapptk"]
-            }
+            print("获取apptk成功！")
+            return data["newapptk"]
         else:
-            print "Get new apptk failed!"
-            return {
-                "get_apptk_successful": False,
-            }
+            print("获取apptk失败！系统自动退出...")
+            sys.exit(0)
 
     def validate_apptk(self, newapptk):
-        url = "https://kyfw.12306.cn/otn/uamauthclient"
         data = {'tk': newapptk}
-        res = self.__session.post(url, data=data)
-        res.encoding = "utf-8"
+        res = api.post(self.__validate_apptk_url, data=data)
         result = res.json()
         if result['result_code'] == 0:
-            print "Apptk verify successfully!"
-            return {
-                "verify_successful": True,
-                "username": result["username"],
-                "apptk": result["apptk"]
-            }
+            print("认证apptk成功！")
+            return result["apptk"]
         else:
-            print "Apptk verify failed!"
-            return {"verify_successful": False}
+            print("认证apptk失败！系统自动退出....")
+            sys.exit(0)

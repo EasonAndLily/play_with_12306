@@ -3,15 +3,18 @@ import sys
 import requests
 sys.path.append('../../../12306')
 from core.auth.basic import BasicAuth
+from core.auth.captcha import Captcha
 
 
 class TestBasicAuth(TestCase):
-    session = requests.session()
-    aut = BasicAuth(session, "test", "test", "35,35")
+    def setUp(self):
+        self.captcha = Captcha()
+        answer = self.captcha.run()
+        self.auth = BasicAuth(answer)
 
     def test_login(self):
-        result = TestBasicAuth.aut.login()
-        self.assertFalse(result["is_login"])
+        result = self.auth.login()
+        self.assertIsNotNone(result)
 
     def test_get_apptk(self):
         TestBasicAuth.session.cookies = requests.utils.add_dict_to_cookiejar(TestBasicAuth.session.cookies, {
