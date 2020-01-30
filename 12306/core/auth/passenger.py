@@ -7,15 +7,43 @@ from config import config
 
 
 class Passenger(object):
-    @classmethod
-    def get_passenger(cls, sumbit_token):
-        url = "https://kyfw.12306.cn/otn/confirmPassenger/getPassengerDTOs"
+    def __init__(self, submit_token):
+        self.__get_passenger_url = "https://kyfw.12306.cn/otn/confirmPassenger/getPassengerDTOs"
+        self.__submit_token = submit_token
+        self.__passengers = self.get_passenger()
+
+    def get_passenger(self):
         data = {
             "_json_att": "",
-            "REPEAT_SUBMIT_TOKEN": sumbit_token
+            "REPEAT_SUBMIT_TOKEN": self.__submit_token
         }
-        res = api.post(url, data=data)
+        res = api.post(self.__get_passenger_url, data=data)
         result = res.json()
         normal_passengers = result["data"]["normal_passengers"]
         passengers = filter(lambda passenger: passenger["passenger_name"] in config.PASSENGERS, normal_passengers)
         return list(passengers)
+
+    def get_passengers_str(self):
+        passengers = []
+        for passenger in self.__passengers:
+            passenger_attrs = ["0",
+                               passenger['passenger_flag'],
+                               passenger['passenger_type'],
+                               passenger['passenger_name'],
+                               passenger['passenger_id_type_code'],
+                               passenger['passenger_id_no'],
+                               passenger['mobile_no'],
+                               "N",
+                               passenger['allEncStr']]
+            passengers.append(str.join(",", passenger_attrs))
+        return str.join("_", passengers)
+
+    def get_ticket_str(self):
+        ticket_str = []
+        for passenger in self.__passengers:
+            passenger_attrs = [passenger["passenger_name"],
+                               passenger['passenger_id_type_code'],
+                               passenger['passenger_id_no'],
+                               "1"]
+            ticket_str.append(str.join(",", passenger_attrs))
+        return str.join("_", ticket_str) + "_"

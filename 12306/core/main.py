@@ -30,9 +30,11 @@ def generate_order():
     order = Order()
     order.submit_order()
     init_params = InitDc.get_params()
-    passengers = Passenger.get_passenger(init_params["REPEAT_SUBMIT_TOKEN"])
-    print(passengers)
-
+    passenger = Passenger(init_params["REPEAT_SUBMIT_TOKEN"])
+    passengers_str = passenger.get_passengers_str()
+    ticket_str = passenger.get_ticket_str()
+    data = order.check_order_info(passengers_str, ticket_str, init_params["REPEAT_SUBMIT_TOKEN"])
+    print(data)
 
 # def generate_init_params(session):
 #     params = InitDc.get_params(session)
@@ -50,7 +52,7 @@ def generate_order():
 #     params["passenger_str"] = passenger_str
 #     params["ticket_str"] = ticket_str
 #     return params
-#
+# #
 #
 # def can_order_left_tickets(session, init_params, config):
 #     left_tickets_info = Ticket.query_left_tickets_info(session, init_params, config["seat_type"], config["date"])

@@ -37,13 +37,13 @@ class Order(object):
             sys.exit(0)
 
     @staticmethod
-    def check_order_info(session, passenger_str, ticket_str, submit_token):
+    def check_order_info(passenger_str, ticket_str, submit_token):
         url = "https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo"
         params = {
             "cancel_flag": 2,
             "bed_level_order_num": "000000000000000000000000000000",
-            "passengerTicketStr": ticket_str,
-            "oldPassengerStr": passenger_str,
+            "passengerTicketStr": passenger_str,
+            "oldPassengerStr": ticket_str,
             "tour_flag": "dc",
             "randCode": "",
             "whatsSelect": 1,
@@ -53,11 +53,11 @@ class Order(object):
             "_json_att": "",
             "REPEAT_SUBMIT_TOKEN": submit_token
         }
-        res = session.post(url, data=params)
+        res = api.post(url, data=params)
         result = res.json()
         if result["status"]:
-            print("Check order successfully!")
+            print("检查订单信息成功！")
             return result["data"]
         else:
-            print("Check Order Failed!")
-            return False
+            print("检查订单信息失败！系统自动退出...")
+            sys.exit(0)

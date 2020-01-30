@@ -15,10 +15,10 @@ FROM_STATION = "北京"
 END_STATION = "上海"
 
 # 出发日期
-TRAIN_DATA = "2020-02-27"
+TRAIN_DATA = "2020-02-28"
 
 # 列车号
 TRAIN_NUMBER = "G101"
 
 # 乘车人 例如：["张三","李四"]
-PASSENGERS = ["李景华"]
+PASSENGERS = ["张三"]
