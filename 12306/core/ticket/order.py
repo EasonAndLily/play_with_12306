@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 import sys
+import time
 
 sys.path.append('../../core')
 from config import config
@@ -15,6 +16,8 @@ class Order(object):
         self.__train_number = config.TRAIN_NUMBER
         self.__submit_url = "https://kyfw.12306.cn/otn/leftTicket/submitOrderRequest"
         self.__check_order_info = "https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo"
+        self.__get_order_info_url = "https://kyfw.12306.cn/otn/confirmPassenger/queryOrderWaitTime"
+        self.__check_order_for_queue = "https://kyfw.12306.cn/otn/confirmPassenger/resultOrderForDcQueue"
         self.__ticket = Ticket()
 
     def submit_order(self):
@@ -62,4 +65,40 @@ class Order(object):
             return result["data"]
         else:
             print("检查订单信息失败！系统自动退出...")
+            sys.exit(0)
+
+    def get_order_id(self, submit_token):
+        url = self.__get_order_info_url + "?random=" + str(
+            int(time.time() * 1000)) + '&tourFlag=dc&_json_att=&REPEAT_SUBMIT_TOKEN=' + submit_token
+        res = api.get(url)
+        result = res.json()
+        if result["status"] and result["data"]["queryOrderWaitTimeStatus"]:
+            print("等待提交订单信息成功!")
+            order_id = result["data"]["orderId"]
+            if order_id is None and result["data"]["waitTime"] > 0:
+                time.sleep(result["data"]["waitTime"])
+                res = api.get(url)
+                result = res.json()
+                if result["status"] and result["data"]["queryOrderWaitTimeStatus"]:
+                    order_id = result["data"]["orderId"]
+            if "msg" in result["data"].keys():
+                print(result["data"]["msg"])
+            return order_id
+        else:
+            print('等待提交订单信息失败!系统自动退出...')
+            sys.exit(0)
+
+    def check_order_successfully(self, order_id, submit_token):
+        params = {
+            'orderSequence_no': order_id,
+            '_json_att': '',
+            'REPEAT_SUBMIT_TOKEN': submit_token
+        }
+        res = api.post(self.__check_order_for_queue, params)
+        print(res.text)
+        result = res.json()
+        if result['status'] and result['data']['submitStatus']:
+            print('下单成功!')
+        else:
+            print("下单失败！系统自动退出.....")
             sys.exit(0)
