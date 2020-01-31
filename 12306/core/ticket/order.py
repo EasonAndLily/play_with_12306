@@ -39,6 +39,7 @@ class Order(object):
     @staticmethod
     def check_order_info(passenger_str, ticket_str, submit_token):
         url = "https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo"
+        print(ticket_str)
         params = {
             "cancel_flag": 2,
             "bed_level_order_num": "000000000000000000000000000000",
@@ -55,7 +56,7 @@ class Order(object):
         }
         res = api.post(url, data=params)
         result = res.json()
-        if result["status"]:
+        if result["status"] and result["data"]["submitStatus"]:
             print("检查订单信息成功！")
             return result["data"]
         else:

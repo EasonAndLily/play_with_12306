@@ -26,7 +26,7 @@ class Passenger(object):
     def get_passengers_str(self):
         passengers = []
         for passenger in self.__passengers:
-            passenger_attrs = ["0",
+            passenger_attrs = ["O",
                                passenger['passenger_flag'],
                                passenger['passenger_type'],
                                passenger['passenger_name'],
