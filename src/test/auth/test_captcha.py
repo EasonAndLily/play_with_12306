@@ -3,7 +3,7 @@ import binascii
 import sys
 from unittest import TestCase
 
-sys.path.append('../../../12306')
+sys.path.append('../../../src')
 from core.auth.captcha import Captcha
 from core.tools.utils import Utils
 

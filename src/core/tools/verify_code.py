@@ -91,7 +91,7 @@ def verify(base64_code):
         text_list.append(text)
     print("题目为: {}".format(text_list))
     # 加载图片分类器
-    model = models.load_model(Utils.get_root_path() + os.path.sep + 'model' + os.path.sep + '12306.image.model.h5',
+    model = models.load_model(Utils.get_root_path() + os.path.sep + 'model' + os.path.sep + 'src.image.model.h5',
                               compile=False)
     labels = model.predict(captcha_item)
     labels = labels.argmax(axis=1)

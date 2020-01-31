@@ -2,7 +2,7 @@ import os
 import sys
 from unittest import TestCase
 
-sys.path.append('../../../12306')
+sys.path.append('../../../src')
 from core.tools.utils import Utils
 
 
@@ -34,3 +34,9 @@ class TestUtils(TestCase):
     def test_get_json_data_from_file(self):
         data = Utils.get_json_data_from_file("./", "stations.json")
         self.assertEqual("北京北", data["VAP"])
+
+    def test_validate_time_format(self):
+        correct = Utils.validate_time_format("2020-02-29")
+        self.assertTrue(correct)
+        error = Utils.validate_time_format("02/29/2020")
+        self.assertFalse(error)

@@ -1,4 +1,5 @@
 # coding:utf-8
+import datetime
 import json
 import os
 
@@ -57,3 +58,11 @@ class Utils(object):
         path = os.path.join(file_path, file_name)
         with open(path) as json_file:
             return json.load(json_file)
+
+    @classmethod
+    def validate_time_format(cls, time_str):
+        try:
+            datetime.datetime.strptime(time_str, '%Y-%m-%d')
+            return True
+        except ValueError:
+            return False

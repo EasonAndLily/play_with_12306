@@ -2,7 +2,7 @@ from unittest import TestCase
 import sys
 import requests
 
-sys.path.append('../../../12306')
+sys.path.append('../../../src')
 from core.auth.basic import BasicAuth
 from core.auth.captcha import Captcha
 

@@ -4,7 +4,7 @@ from unittest import TestCase
 
 import requests
 
-sys.path.append('../../../12306')
+sys.path.append('../../../src')
 from core.ticket.order import Order
 
 

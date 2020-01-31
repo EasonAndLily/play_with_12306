@@ -2,7 +2,7 @@
 import sys
 from unittest import TestCase
 
-sys.path.append('../../../12306')
+sys.path.append('../../../src')
 from core.tools.init_dc import InitDc
 
 
