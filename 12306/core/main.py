@@ -31,9 +31,9 @@ def generate_order():
     order.submit_order()
     init_params = InitDc.get_params()
     passenger = Passenger(init_params["REPEAT_SUBMIT_TOKEN"])
-    passengers_str = passenger.get_passengers_str()
-    ticket_str = passenger.get_ticket_str()
-    data = order.check_order_info(passengers_str, ticket_str, init_params["REPEAT_SUBMIT_TOKEN"])
+    init_params["passengers_str"] = passenger.get_passengers_str()
+    init_params["ticket_str"] = passenger.get_ticket_str()
+    data = order.check_order_info(init_params)
     print(data)
 
 # def generate_init_params(session):

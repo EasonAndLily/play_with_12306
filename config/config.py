@@ -18,7 +18,10 @@ END_STATION = "上海"
 TRAIN_DATA = "2020-02-28"
 
 # 列车号
-TRAIN_NUMBER = "G101"
+TRAIN_NUMBER = "G111"
 
 # 乘车人 例如：["张三","李四"]
 PASSENGERS = ["张三"]
+
+# 座位类型[二等座:"O", 一等座:"M", 商务座:"9", 硬卧："3", 硬座:"1", 软卧:"4"]
+SEAT_TYPE = "O"

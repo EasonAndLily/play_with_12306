@@ -14,10 +14,11 @@ class Order(object):
         self.__to_station_name = config.END_STATION
         self.__train_number = config.TRAIN_NUMBER
         self.__submit_url = "https://kyfw.12306.cn/otn/leftTicket/submitOrderRequest"
+        self.__check_order_info = "https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo"
+        self.__ticket = Ticket()
 
     def submit_order(self):
-        ticket = Ticket()
-        secret = ticket.get_train_secret(self.__train_number)
+        secret = self.__ticket.get_train_secret(self.__train_number)
         data = {
             "secretStr": secret,
             "train_date": self.__train_date,
@@ -36,15 +37,12 @@ class Order(object):
             print("订单提交失败！系统自动退出...")
             sys.exit(0)
 
-    @staticmethod
-    def check_order_info(passenger_str, ticket_str, submit_token):
-        url = "https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo"
-        print(ticket_str)
+    def check_order_info(self, init_params):
         params = {
             "cancel_flag": 2,
             "bed_level_order_num": "000000000000000000000000000000",
-            "passengerTicketStr": passenger_str,
-            "oldPassengerStr": ticket_str,
+            "passengerTicketStr": init_params["passengers_str"],
+            "oldPassengerStr": init_params["ticket_str"],
             "tour_flag": "dc",
             "randCode": "",
             "whatsSelect": 1,
@@ -52,12 +50,13 @@ class Order(object):
             "sig": "",
             "scene": "nc_login",
             "_json_att": "",
-            "REPEAT_SUBMIT_TOKEN": submit_token
+            "REPEAT_SUBMIT_TOKEN": init_params["REPEAT_SUBMIT_TOKEN"]
         }
-        res = api.post(url, data=params)
+        res = api.post(self.__check_order_info, data=params)
         result = res.json()
         if result["status"] and result["data"]["submitStatus"]:
             print("检查订单信息成功！")
+            self.__ticket.query_left_tickets_info(init_params)
             return result["data"]
         else:
             print("检查订单信息失败！系统自动退出...")

@@ -17,6 +17,7 @@ class Ticket(object):
         self.__end_station = self.__station.get_station_key_by_values(config.END_STATION)
         self.__train_date = config.TRAIN_DATA
         self.__query_left_tickets_url = "https://kyfw.12306.cn/otn/leftTicket/queryZ"
+        self.__query_queue_count = "https://kyfw.12306.cn/otn/confirmPassenger/getQueueCount"
 
     def query_left_tickets(self):
         url = self.__query_left_tickets_url + "?leftTicketDTO.train_date=" + self.__train_date + "&leftTicketDTO.from_station=" + \
@@ -63,15 +64,13 @@ class Ticket(object):
         specified_ticket = list(filter(lambda item: item["trains_number"] == train_numbers, tickets))
         return specified_ticket[0]["train_secret"]
 
-    @staticmethod
-    def query_left_tickets_info(session, init_params, seat_type, train_date):
-        url = "https://kyfw.12306.cn/otn/confirmPassenger/getQueueCount"
+    def query_left_tickets_info(self, init_params):
         params = {
-            "train_date": datetime.datetime.strptime(train_date, '%Y-%m-%d').strftime(
+            "train_date": datetime.datetime.strptime(config.TRAIN_DATA, '%Y-%m-%d').strftime(
                 "%a %b %d %Y %H:%M:%S GMT+0800 (中国标准时间)"),
             "train_no": init_params["train_no"],
             "stationTrainCode": init_params["station_train_code"],
-            "seatType": seat_type,
+            "seatType": config.SEAT_TYPE,
             "fromStationTelecode": init_params["from_station_telecode"],
             "toStationTelecode": init_params["to_station"],
             "leftTicket": init_params["leftTicketStr"],
@@ -80,17 +79,13 @@ class Ticket(object):
             "_json_att": "",
             "REPEAT_SUBMIT_TOKEN": init_params["REPEAT_SUBMIT_TOKEN"]
         }
-        print
-        json.dumps(params, sort_keys=True, indent=4, separators=(',', ':'))
-        res = session.post(url, data=params)
-        print
-        res.text
+        res = api.post(self.__query_queue_count, data=params)
         result = res.json()
         if result["status"]:
-            return {
-                "left_tickets": result["data"]["ticket"],
-                "queue_count": result["data"]["count"]
-            }
+            print("您所选的座位还剩余" + result["data"]["ticket"] + "张车票")
+        else:
+            print("获取余票失败！系统自动退出.....")
+            sys.exit(0)
 
     @staticmethod
     def choose_seat(session, init_params, choose_seats):
