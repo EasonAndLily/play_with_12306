@@ -66,3 +66,14 @@ class Utils(object):
             return True
         except ValueError:
             return False
+
+    @classmethod
+    def current_date(cls):
+        return datetime.datetime.now().strftime('%Y-%m-%d')
+
+    @classmethod
+    def check_time_in_correct_range(cls, time_str):
+        today = datetime.datetime.strptime(cls.current_date(), '%Y-%m-%d')
+        depart_day = datetime.datetime.strptime(time_str, '%Y-%m-%d')
+        difference = (depart_day - today).days
+        return 29 >= difference > 0

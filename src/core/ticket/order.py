@@ -2,9 +2,8 @@
 import sys
 import time
 
-sys.path.append('../../core')
 from config import config
-from tools.api_request import api
+from src.core.tools.api_request import api
 from .ticket import Ticket
 
 

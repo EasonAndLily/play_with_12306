@@ -23,3 +23,10 @@ class TestStation(TestCase):
     def test_request_stations(self):
         stations = Station.request_stations()
         self.assertIsNotNone(stations)
+
+    def test_has_this_station(self):
+        station = Station()
+        exist = station.has_this_station("上海")
+        self.assertTrue(exist)
+        not_exist = station.has_this_station("不知道")
+        self.assertFalse(not_exist)

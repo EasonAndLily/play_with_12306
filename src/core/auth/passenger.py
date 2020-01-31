@@ -1,8 +1,7 @@
 # -*- coding: UTF-8 -*-
 import sys
 
-sys.path.append('../../core')
-from tools.api_request import api
+from src.core.tools.api_request import api
 from config import config
 
 

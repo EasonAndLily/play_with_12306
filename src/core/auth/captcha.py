@@ -1,10 +1,9 @@
 import sys
 
-sys.path.append('../../core')
-from tools import verify_code
+from src.core.tools import verify_code
 from config import config
-from tools.utils import Utils
-from tools.api_request import api
+from src.core.tools.utils import Utils
+from src.core.tools.api_request import api
 
 
 class Captcha(object):

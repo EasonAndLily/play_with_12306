@@ -1,9 +1,7 @@
 import sys
-import urllib3
 
-sys.path.append('../../core')
 from config import config
-from tools.api_request import api
+from src.core.tools.api_request import api
 
 
 class BasicAuth(object):

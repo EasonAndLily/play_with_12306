@@ -40,3 +40,9 @@ class TestUtils(TestCase):
         self.assertTrue(correct)
         error = Utils.validate_time_format("02/29/2020")
         self.assertFalse(error)
+
+    def test_check_time_in_correct_range(self):
+        correct = Utils.check_time_in_correct_range("2020-02-29")
+        self.assertTrue(correct)
+        error = Utils.check_time_in_correct_range("2019-02-01")
+        self.assertFalse(error)

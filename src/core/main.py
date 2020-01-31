@@ -1,10 +1,10 @@
 # -*- coding: UTF-8 -*-
-from auth.captcha import Captcha
-from auth.basic import BasicAuth
+from src.core.auth.captcha import Captcha
+from src.core.auth.basic import BasicAuth
 from config import config
-from ticket.order import Order
-from tools.init_dc import InitDc
-from auth.passenger import Passenger
+from src.core.ticket.order import Order
+from src.core.tools.init_dc import InitDc
+from src.core.auth.passenger import Passenger
 
 
 def login():
@@ -33,6 +33,6 @@ def generate_order():
     print("恭喜您购买车票成功，赶紧登陆网页版12306，到订单中心->火车票订单->未完成订单 去付款吧！")
 
 
-if __name__ == '__main__':
+def set_up():
     login()
     generate_order()

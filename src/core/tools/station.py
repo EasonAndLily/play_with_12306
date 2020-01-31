@@ -20,6 +20,9 @@ class Station(object):
     def get_station_key_by_values(self, value):
         return self.__stations[value]
 
+    def has_this_station(self, name):
+        return name in self.__stations.keys()
+
     @classmethod
     def request_stations(cls):
         url = "https://kyfw.12306.cn/otn/resources/js/framework/station_name.js?station_version=1.8971"

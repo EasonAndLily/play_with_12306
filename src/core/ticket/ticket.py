@@ -1,13 +1,11 @@
 # -*- coding: UTF-8 -*-
 import datetime
-import json
 import requests
 import sys
 
-sys.path.append('../../core')
 from config import config
-from tools.api_request import api
-from tools.station import Station
+from src.core.tools.api_request import api
+from src.core.tools.station import Station
 
 
 class Ticket(object):
@@ -21,7 +19,8 @@ class Ticket(object):
         self.__choose_seats_url = "https://kyfw.12306.cn/otn/confirmPassenger/confirmSingleForQueue"
 
     def query_left_tickets(self):
-        url = self.__query_left_tickets_url + "?leftTicketDTO.train_date=" + self.__train_date + "&leftTicketDTO.from_station=" + \
+        url = self.__query_left_tickets_url + "?leftTicketDTO.train_date=" + self.__train_date + \
+              "&leftTicketDTO.from_station=" + \
               self.__from_station + "&leftTicketDTO.to_station=" + self.__end_station + "&purpose_codes=ADULT"
         res = api.get(url)
         data = res.json()
@@ -57,8 +56,8 @@ class Ticket(object):
     def can_book_specified_ticket(self, train_numbers, seat_info):
         tickets = self.query_left_tickets()
         specified_ticket = list(filter(lambda item: item["trains_number"] == train_numbers, tickets))
-        return len(specified_ticket) > 0 and specified_ticket[0][seat_info] != "" \
-               and specified_ticket[0][seat_info] != u"无"
+        return len(specified_ticket) > 0 and specified_ticket[0][seat_info] != "" and specified_ticket[0][
+            seat_info] != u"无"
 
     def get_train_secret(self, train_numbers):
         tickets = self.query_left_tickets()
