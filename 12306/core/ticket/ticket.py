@@ -17,7 +17,8 @@ class Ticket(object):
         self.__end_station = self.__station.get_station_key_by_values(config.END_STATION)
         self.__train_date = config.TRAIN_DATA
         self.__query_left_tickets_url = "https://kyfw.12306.cn/otn/leftTicket/queryZ"
-        self.__query_queue_count = "https://kyfw.12306.cn/otn/confirmPassenger/getQueueCount"
+        self.__query_queue_count_url = "https://kyfw.12306.cn/otn/confirmPassenger/getQueueCount"
+        self.__choose_seats_url = "https://kyfw.12306.cn/otn/confirmPassenger/confirmSingleForQueue"
 
     def query_left_tickets(self):
         url = self.__query_left_tickets_url + "?leftTicketDTO.train_date=" + self.__train_date + "&leftTicketDTO.from_station=" + \
@@ -79,26 +80,24 @@ class Ticket(object):
             "_json_att": "",
             "REPEAT_SUBMIT_TOKEN": init_params["REPEAT_SUBMIT_TOKEN"]
         }
-        res = api.post(self.__query_queue_count, data=params)
+        res = api.post(self.__query_queue_count_url, data=params)
         result = res.json()
         if result["status"]:
-            print("您所选的座位还剩余" + result["data"]["ticket"] + "张车票")
+            print("您所选的座位还剩余" + result["data"]["ticket"] + "张车票, 当前排队人数为：" + result["data"]["count"])
         else:
             print("获取余票失败！系统自动退出.....")
             sys.exit(0)
 
-    @staticmethod
-    def choose_seat(session, init_params, choose_seats):
-        url = "https://kyfw.12306.cn/otn/confirmPassenger/confirmSingleForQueue"
+    def choose_seat(self, init_params):
         params = {
-            "passengerTicketStr": init_params["passenger_str"],
+            "passengerTicketStr": init_params["passengers_str"],
             "oldPassengerStr": init_params["ticket_str"],
             "randCode": "",
             "purpose_codes": init_params["purpose_codes"],
             "key_check_isChange": init_params["key_check_isChange"],
             "leftTicketStr": init_params["leftTicketStr"],
             "train_location": init_params["train_location"],
-            "choose_seats": choose_seats,
+            "choose_seats": config.CHOOSE_SEATS,
             "seatDetailType": 000,
             "whatsSelect": 1,
             "roomType": 00,
@@ -106,8 +105,9 @@ class Ticket(object):
             "_json_att": "",
             "REPEAT_SUBMIT_TOKEN": init_params["REPEAT_SUBMIT_TOKEN"]
         }
-        res = session.post(url, data=params)
-        print
-        res.text
+        res = api.post(self.__choose_seats_url, data=params)
         result = res.json()
-        return result["status"] and result["data"]["submitStatus"]
+        if result["status"] and result["data"]["submitStatus"]:
+            print("选择座位成功！")
+        else:
+            print("您所坐的车辆不支持选座！")

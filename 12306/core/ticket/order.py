@@ -57,6 +57,8 @@ class Order(object):
         if result["status"] and result["data"]["submitStatus"]:
             print("检查订单信息成功！")
             self.__ticket.query_left_tickets_info(init_params)
+            if result["data"]["canChooseSeats"] == "Y":
+                self.__ticket.choose_seat(init_params)
             return result["data"]
         else:
             print("检查订单信息失败！系统自动退出...")
