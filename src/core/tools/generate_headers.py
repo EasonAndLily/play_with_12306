@@ -13,7 +13,7 @@ class GenerateHeaders(object):
             "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
             "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                           'Chrome/69.0.3497.100 Safari/537.36',
-            "Host": "kyfw.src.cn",
+            "Host": "kyfw.12306.cn",
             "Origin": "https://kyfw.12306.cn",
             "Referer": "https://kyfw.12306.cn/otn/resources/login.html",
         }
@@ -34,6 +34,6 @@ class GenerateHeaders(object):
         #     "RAIL_DEVICEID": data["dfp"]
         # }
         return {
-            "RAIL_EXPIRATION": "1580581700207",
-            "RAIL_DEVICEID": "VTag2zFVgHmrCUf0WLCcq-tqRZh2ceEusCTZKxsgKIYyPg3JN0uFXOkgbRuYRYOLDSNfjRFGg6aoea_redAx2jKktgpsS6buUlmGp9l7jKt_qiZoRI4pKrPzaBc77Y2TT_TysPzeOuaLtwSkGgVyJAIk6Ri0ZwKv"
+            "RAIL_EXPIRATION": "1582016351490",
+            "RAIL_DEVICEID": "pkXrk8w9p8EoPUJBLSB1xJQs3cXdZgXK-iimixuZr5CXYT2R34sG1kd79GDIK1cs89OZ7E67TxjU4KfmfwWrpSV9fsrnxepXvqqXSEdD37JSBnMvv-FTRxuiXb3vDAYY4PHyV9BCWGAPqT5IPvXHvCx2vgmnouf-"
         }
