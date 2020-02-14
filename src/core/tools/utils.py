@@ -72,6 +72,11 @@ class Utils(object):
         return datetime.datetime.now().strftime('%Y-%m-%d')
 
     @classmethod
+    def is_today(cls, time_str):
+        date_time = datetime.datetime.strptime(time_str, '%Y-%m-%d  %H:%M:%S')
+        return date_time.date().strftime("%Y-%m-%d") == cls.current_date()
+
+    @classmethod
     def check_time_in_correct_range(cls, time_str):
         today = datetime.datetime.strptime(cls.current_date(), '%Y-%m-%d')
         depart_day = datetime.datetime.strptime(time_str, '%Y-%m-%d')

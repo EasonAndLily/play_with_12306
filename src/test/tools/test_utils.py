@@ -46,3 +46,9 @@ class TestUtils(TestCase):
         self.assertTrue(correct)
         error = Utils.check_time_in_correct_range("2019-02-01")
         self.assertFalse(error)
+
+    def test_is_today(self):
+        right = Utils.is_today("2020-02-14 21:46:19")
+        self.assertTrue(right)
+        error = Utils.is_today("2020-02-16 21:46:19")
+        self.assertFalse(error)

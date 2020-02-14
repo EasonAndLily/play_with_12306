@@ -17,6 +17,7 @@ class Order(object):
         self.__check_order_info = "https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo"
         self.__get_order_info_url = "https://kyfw.12306.cn/otn/confirmPassenger/queryOrderWaitTime"
         self.__check_order_for_queue = "https://kyfw.12306.cn/otn/confirmPassenger/resultOrderForDcQueue"
+        self.__not_complete_order = "https://kyfw.12306.cn/otn/queryOrder/queryMyOrderNoComplete"
         self.__ticket = Ticket()
 
     def submit_order(self):
@@ -66,25 +67,43 @@ class Order(object):
             print("检查订单信息失败！系统自动退出...")
             sys.exit(0)
 
-    def get_order_id(self, submit_token):
+    def check_order_wait_time(self, submit_token):
         url = self.__get_order_info_url + "?random=" + str(
             int(time.time() * 1000)) + '&tourFlag=dc&_json_att=&REPEAT_SUBMIT_TOKEN=' + submit_token
         res = api.get(url)
         result = res.json()
+        print(result)
         if result["status"] and result["data"]["queryOrderWaitTimeStatus"]:
             print("等待提交订单信息成功!")
             order_id = result["data"]["orderId"]
-            if order_id is None and result["data"]["waitTime"] > 0:
+            if result["data"]["waitTime"] <= 0 and result["data"]["requestId"] is not None and order_id is None:
+                return True, order_id
+            elif result["data"]["waitTime"] > 0:
                 time.sleep(result["data"]["waitTime"])
                 res = api.get(url)
-                result = res.json()
-                if result["status"] and result["data"]["queryOrderWaitTimeStatus"]:
-                    order_id = result["data"]["orderId"]
+                waited_result = res.json()
+                if waited_result["status"] and waited_result["data"]["queryOrderWaitTimeStatus"]:
+                    return True, waited_result["data"]["orderId"]
+            else:
+                print("等待提交订单信息失败!系统自动退出...")
+                sys.exit(0)
             if "msg" in result["data"].keys():
                 print(result["data"]["msg"])
-            return order_id
         else:
             print('等待提交订单信息失败!系统自动退出...')
+            sys.exit(0)
+
+    def get_not_complete_order(self):
+        params = {
+            "_json_att": ""
+        }
+        res = api.post(self.__not_complete_order, data=params)
+        result = res.json()
+        print(result)
+        if result["status"]:
+            return result["data"]["orderDBList"]
+        else:
+            print("获取未完成失败！系统自动退出。。。")
             sys.exit(0)
 
     def check_order_successfully(self, order_id, submit_token):
@@ -93,7 +112,7 @@ class Order(object):
             '_json_att': '',
             'REPEAT_SUBMIT_TOKEN': submit_token
         }
-        res = api.post(self.__check_order_for_queue, params)
+        res = api.post(self.__check_order_for_queue, data=params)
         print(res.text)
         result = res.json()
         if result['status'] and result['data']['submitStatus']:
