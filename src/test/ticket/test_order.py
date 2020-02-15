@@ -33,6 +33,6 @@ class TestOrder(TestCase):
             "BIGipServerpool_passport": "300745226.50215.0000"
         }
         session.cookies = requests.utils.cookiejar_from_dict(cookies_dict)
-        result = order.submit_order(requests.session(), train_secret)
+        result = order.ready_order(requests.session(), train_secret)
         self.assertTrue(result["status"])
         self.assertEqual("N", result["data"])
