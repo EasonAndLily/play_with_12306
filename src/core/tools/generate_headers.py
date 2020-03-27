@@ -1,5 +1,6 @@
-import json
 import time
+from selenium import webdriver
+from src.core.tools.utils import Utils
 
 
 class GenerateHeaders(object):
@@ -19,21 +20,48 @@ class GenerateHeaders(object):
         }
 
     @classmethod
-    def get_rail_expiration_device_id(cls):
-        # timestamp = int(round(time.time() * 1000))
-        # url = "https://kyfw.12306.cn/otn/HttpZF/logdevice?algID=4BbLmSosEH&hashCode=xm6v23GpXJkE8eByZcqL9cWy3Lqqz8s9NUbRG8hKnXE&FMQw=1&q4f3=en&VySQ=FGGaYCkR6vF4hcIljn2z5RvD7ZoZN5Vj&VPIf=1&custID=133&VEek=unknown&dzuS=0&yD16=0&EOQP=c227b88b01f5c513710d4b9f16a5ce52&jp76=52d67b2a5aa5e031084733d5006cc664&hAqN=MacIntel&platform=WEB&ks0Q=d22ca0b81584fbea62237b14bd04c866&TeRS=900x1440&tOHY=24xx900x1440&Fvje=i1l1o1s1&q5aJ=-8&wNLf=99115dfb07133750ba677d055874de87&0aew=Mozilla/5.0%20(Macintosh;%20Intel%20Mac%20OS%20X%2010_13_3)%20AppleWebKit/537.36%20(KHTML,%20like%20Gecko)%20Chrome/79.0.3945.88%20Safari/537.36&E3gR=57e9a4845965065fe3e7f8f81bfb501e&timestamp=" + str(
-        #     timestamp)
-        # import requests
-        # res = requests.get(url)
-        # origin_data = res.text
-        # start = origin_data.find('{')
-        # end = origin_data.find('}')
-        # data = json.loads(origin_data[start: end + 1])
-        # return {
-        #     "RAIL_EXPIRATION": data["exp"],
-        #     "RAIL_DEVICEID": data["dfp"]
-        # }
-        return {
-            "RAIL_EXPIRATION": "1582016351490",
-            "RAIL_DEVICEID": "pkXrk8w9p8EoPUJBLSB1xJQs3cXdZgXK-iimixuZr5CXYT2R34sG1kd79GDIK1cs89OZ7E67TxjU4KfmfwWrpSV9fsrnxepXvqqXSEdD37JSBnMvv-FTRxuiXb3vDAYY4PHyV9BCWGAPqT5IPvXHvCx2vgmnouf-"
+    def generate_rail_device(cls):
+        options = webdriver.ChromeOptions()
+        options.add_argument(
+            '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+            '(KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36')
+        options.add_argument("--no-sandbox")
+        options.add_argument("--headless")
+        driver = webdriver.Chrome()
+        driver.get("https://www.12306.cn/index/index.html")
+        print("Please wait about 10s.....")
+        time.sleep(10)
+        rail_device = {
+            "device": None,
+            "expiration": None
         }
+        for cookie in driver.get_cookies():
+            if cookie.get("name") == "RAIL_DEVICEID":
+                rail_device["device"] = cookie.get("value")
+            if cookie.get("name") == "RAIL_EXPIRATION":
+                rail_device["expiration"] = cookie.get("value")
+        print(rail_device)
+        cls.save_device(rail_device)
+        print("Generate rail device successfully and save it to device,json file!")
+        driver.quit()
+
+    @classmethod
+    def save_device(cls, rail_device):
+        root_path = Utils.get_root_path()
+        path = root_path + "/config"
+        Utils.save_json_data_to_file(rail_device, path, "device.json")
+
+    @classmethod
+    def get_device(cls):
+        root_path = Utils.get_root_path()
+        path = root_path + "/config"
+        device = Utils.get_json_data_from_file(path, "device.json")
+        return {
+            "RAIL_EXPIRATION": device["expiration"],
+            "RAIL_DEVICEID": device["device"]
+        }
+
+
+if __name__ == '__main__':
+    device = GenerateHeaders.get_device()
+    print(device)
