@@ -38,11 +38,25 @@ class CheckConfig:
         if passengers is None or len(passengers) <= 0:
             raise Exception("乘车人未配置，请添加乘车人！")
 
+    @classmethod
+    def check_train_number(cls, train_number):
+        if train_number is None or len(train_number) <= 0:
+            raise Exception("列出编号不能为空，请配置需购买的列车号！")
+
+    @classmethod
+    def check_seat_type(cls, seat_type):
+        if seat_type is None or len(seat_type) <= 0:
+            raise Exception("座位编号不能为空，请配置需购买的座位类型！")
+        if seat_type not in ["O", "M", "9", "3", "1", "4"]:
+            raise Exception("座位编号配置不合法，请配置正确的座位类型编号！")
+
     def check(self):
         CheckConfig.check_username_password(self.config.USERNAME, self.config.PASSWORD)
         CheckConfig.check_passengers(self.config.PASSENGERS)
         CheckConfig.is_correct_date(self.config.TRAIN_DATA)
         CheckConfig.is_existing_station(self.config.FROM_STATION, self.config.END_STATION)
+        CheckConfig.check_train_number(self.config.TRAIN_NUMBER)
+        CheckConfig.check_seat_type(self.config.SEAT_TYPE)
 
 
 

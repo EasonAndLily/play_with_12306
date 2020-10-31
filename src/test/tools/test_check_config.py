@@ -50,3 +50,18 @@ class TestCheckConfig(TestCase):
         with self.assertRaises(Exception) as context:
             CheckConfig.check_passengers(None)
         self.assertTrue('乘车人未配置，请添加乘车人！' in str(context.exception))
+
+    def test_check_train_number(self):
+        with self.assertRaises(Exception) as context:
+            CheckConfig.check_train_number("")
+        self.assertTrue('列出编号不能为空，请配置需购买的列车号！' in str(context.exception))
+
+    def test_check_seat_type_not_null(self):
+        with self.assertRaises(Exception) as context:
+            CheckConfig.check_seat_type("")
+        self.assertTrue('座位编号不能为空，请配置需购买的座位类型！' in str(context.exception))
+
+    def test_check_seat_type_not_correct(self):
+        with self.assertRaises(Exception) as context:
+            CheckConfig.check_seat_type("8")
+        self.assertTrue('座位编号配置不合法，请配置正确的座位类型编号！' in str(context.exception))

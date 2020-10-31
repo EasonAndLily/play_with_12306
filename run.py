@@ -17,6 +17,4 @@ if __name__ == '__main__':
     except Exception as ex:
         print(ex)
         exit(0)
-    # check_python_evn()
-    # check_config_info()
     # set_up()
