@@ -15,7 +15,7 @@ FROM_STATION = "北京"
 END_STATION = "上海"
 
 # 出发日期
-TRAIN_DATA = "2020-02-28"
+TRAIN_DATA = "2020-10-31"
 
 # 列车号
 TRAIN_NUMBER = "G111"

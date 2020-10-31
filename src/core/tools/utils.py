@@ -81,4 +81,4 @@ class Utils(object):
         today = datetime.datetime.strptime(cls.current_date(), '%Y-%m-%d')
         depart_day = datetime.datetime.strptime(time_str, '%Y-%m-%d')
         difference = (depart_day - today).days
-        return 29 >= difference > 0
+        return 29 >= difference >= 0
