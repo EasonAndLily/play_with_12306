@@ -1,4 +1,6 @@
 # coding:utf-8
+import base64
+import binascii
 import datetime
 import json
 import os
@@ -82,3 +84,11 @@ class Utils(object):
         depart_day = datetime.datetime.strptime(time_str, '%Y-%m-%d')
         difference = (depart_day - today).days
         return 29 >= difference >= 0
+
+    @classmethod
+    def is_base64(cls, s):
+        try:
+            base64.decodebytes(s)
+            return True
+        except binascii.Error:
+            return False
