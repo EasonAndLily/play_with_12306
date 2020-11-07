@@ -17,9 +17,7 @@ class TestCaptcha(TestCase):
         self.assertIsNotNone(image_data)
         self.assertTrue(Utils.is_base64(image_data.encode()))
 
-    # def test_check_captcha(self):
-    #     image_data = self.captcha.get_captcha()
-    #     image_indexes = Captcha.verify_captcha_auto(image_data)
-    #     answer = Utils.get_captcha_answer(image_indexes)
-    #     result = self.captcha.check_captcha(answer)
-    #     self.assertTrue(result)
+    def test_check_captcha_auto(self):
+        image_data = Utils.get_json_data_from_file('./', 'captcha.json')
+        image_indexes = Captcha.verify_captcha_auto(image_data["image"])
+        self.assertEqual(image_indexes, [2, 4])

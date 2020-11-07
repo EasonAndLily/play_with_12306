@@ -2,6 +2,7 @@
 import sys
 from config import config
 from src.core.tools.check_config import CheckConfig
+from src.core.main import set_up
 
 
 def check_python_evn():
@@ -17,4 +18,4 @@ if __name__ == '__main__':
     except Exception as ex:
         print(ex)
         exit(0)
-    # set_up()
+    set_up()

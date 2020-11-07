@@ -34,5 +34,9 @@ def generate_order():
 
 
 def set_up():
-    login()
-    generate_order()
+    from config import config
+
+    captcha = Captcha()
+    captcha.run(config)
+    # login()
+    # generate_order()

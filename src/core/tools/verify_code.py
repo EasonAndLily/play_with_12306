@@ -69,8 +69,8 @@ def verify(base64_code):
 
     text_list = []
     # 识别文字
-    model = models.load_model(Utils.get_root_path() + os.path.sep + 'model' + os.path.sep + 'model.v2.0.h5',
-                              compile=False)
+    import keras
+    model = models.load_model(Utils.get_root_path() + os.path.sep + 'model' + os.path.sep + 'model.v2.0.h5', compile=False)
     label = model.predict(text)
     label = label.argmax()
     text = verify_titles[label]

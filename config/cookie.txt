@@ -1,6 +1,3 @@
 #LWP-Cookies-2.0
-Set-Cookie3: BIGipServerpool_passport="233046538.50215.0000"; path="/"; domain=""; path_spec; discard; HttpOnly=None; version=0
 Set-Cookie3: RAIL_DEVICEID="OnQmh1JL2PvAYvji4SKDmrP2VkNRTnTj16di_YcoAeD6KdPaM-ZkEjVOeSxZEclWh44xEfVQGPBYRWZpvlmqTpJ4kMaBy6Bhf93gQt4bCFLWGpy7hrWN62bScFTdrBiRmMuJ5fq7zoAnGwPH8ryHT3-B1ZJUy3K4"; path="/"; domain=""; path_spec; discard; HttpOnly=None; version=0
 Set-Cookie3: RAIL_EXPIRATION=1585661595790; path="/"; domain=""; path_spec; discard; HttpOnly=None; version=0
-Set-Cookie3: _passport_ct=ff790893fd7447e08d919a9949fab046t8158; path="/"; domain=""; path_spec; discard; HttpOnly=None; version=0
-Set-Cookie3: _passport_session=f09245aabcc64ceea7cd1a8e2362c0694315; path="/"; domain=""; path_spec; discard; HttpOnly=None; version=0

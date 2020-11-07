@@ -59,9 +59,9 @@ class Captcha(object):
 
 
 if __name__ == '__main__':
-    from config import config
-    captcha = Captcha()
     try:
+        from config import config
+        captcha = Captcha()
         captcha.run(config)
     except Exception as ex:
         print(ex)
