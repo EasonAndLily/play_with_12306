@@ -7,13 +7,14 @@ from src.core.tools.init_dc import InitDc
 from src.core.auth.passenger import Passenger
 
 
+
 def login():
     captcha = Captcha()
-    answer = captcha.run()
-    aut = BasicAuth(answer)
-    aut.login()
-    app_data = aut.get_apptk()
-    aut.validate_apptk(app_data)
+    answer = captcha.run(config)
+    aut = BasicAuth(config)
+    aut.silde_passcode()
+    # app_data = aut.get_apptk()
+    # aut.validate_apptk(app_data)
 
 
 def generate_order():
@@ -34,9 +35,5 @@ def generate_order():
 
 
 def set_up():
-    from config import config
-
-    captcha = Captcha()
-    captcha.run(config)
-    # login()
+    login()
     # generate_order()

@@ -5,29 +5,48 @@ from src.core.tools.api_request import api
 
 
 class BasicAuth(object):
-    def __init__(self, answer):
+    def __init__(self, config):
         self.__username = config.USERNAME
         self.__password = config.PASSWORD
-        self.__answer = answer
         self.__login_url = "https://kyfw.12306.cn/passport/web/login"
         self.__get_apptk_url = "https://kyfw.12306.cn/passport/web/auth/uamtk"
         self.__validate_apptk_url = "https://kyfw.12306.cn/otn/uamauthclient"
+        self.__slide_passcode_url = "https://kyfw.12306.cn/passport/web/slide-passcode"
+        self.__if_check_slide_passcode_token = ""
 
-    def login(self):
+    def silde_passcode(self):
         data = {
-            "username": self.__username,
-            "password": self.__password,
             "appid": "otn",
-            "answer": self.__answer
+            "slideMode": 0,
+            "username": self.__username
         }
-        response = api.post(self.__login_url, data=data)
+        response = api.post(self.__slide_passcode_url, data=data)
         data = response.json()
-        if data["result_code"] == 0:
-            print("用户" + config.USERNAME + "登陆成功!")
-            return data["uamtk"]
+        if data["result_code"] == '0':
+            print("启用滑块验证！")
+            self.__if_check_slide_passcode_token = data["if_check_slide_passcode_token"]
+        elif data["result_code"] == '1':
+            print("滑块校验成功！")
         else:
-            print("用户" + config.USERNAME + "登陆失败！系统自动退出...")
-            sys.exit(0)
+            raise Exception("滑块验证失败！")
+
+    # def login(self):
+    #     data = {
+    #         "username": self.__username,
+    #         "password": self.__password,
+    #         "appid": "otn",
+    #         "answer": self.__answer
+    #     }
+    #     response = api.post(self.__login_url, data=data)
+    #     print(response.text)
+    #     data = response.json()
+    #     if data["result_code"] == 0:
+    #         print("用户" + config.USERNAME + "登陆成功!")
+    #         return data["uamtk"]
+    #     else:
+    #         print(data)
+    #         print("用户" + config.USERNAME + "登陆失败！系统自动退出...")
+    #         sys.exit(0)
 
     def get_apptk(self):
         res = api.post(self.__get_apptk_url, data={"appid": "otn"})

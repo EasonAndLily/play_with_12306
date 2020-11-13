@@ -15,7 +15,7 @@ if __name__ == '__main__':
         check_python_evn()
         check_config = CheckConfig(config)
         check_config.check()
+        set_up()
     except Exception as ex:
         print(ex)
         exit(0)
-    set_up()

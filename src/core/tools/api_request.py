@@ -9,9 +9,9 @@ class API(object):
         self.__timeout = timeout
         self.__headers = GenerateHeaders.get_headers()
         self.__cookie = CookieUtils()
-        expiration_device = GenerateHeaders.get_device()
-        self.__cookie.save_cookie(RAIL_EXPIRATION=expiration_device["RAIL_EXPIRATION"],
-                                  RAIL_DEVICEID=expiration_device["RAIL_DEVICEID"])
+        # expiration_device = GenerateHeaders.get_device()
+        # self.__cookie.save_cookie(RAIL_EXPIRATION=expiration_device["RAIL_EXPIRATION"],
+        #                           RAIL_DEVICEID=expiration_device["RAIL_DEVICEID"])
 
     def get(self, url):
         self.__cookie.load_cookie(self.__session)
