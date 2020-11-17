@@ -40,7 +40,94 @@ Hello，陌生的开发者，你好，欢迎来到爬虫的世界！如果你是
 
 ## 本地搭建抢票程序
 
-## 二次开发参考文档
+#### step1：安装Python3，并安装虚拟开发环境(virtualenv)
+
+本项目的Python版本为Python3以上，基于此，我们推荐您使用虚拟开发环境来隔离Python运行环境：
+
+* **macOS 或 Linux:**
+
+    ```bash
+    python3 -m pip install --user virtualenv
+    ```
+
+* **Windows**
+
+    ```bash
+    py -m pip install --user virtualenv
+    ```
+
+#### Step2: 创建虚拟环境并激活
+
+安装好virtualenv之后，进入此项目文件夹中，创建虚拟开发环境：
+
+* **macOS 或 Linux:**
+
+    ```bash
+    cd play_with_12306
+    python3 -m venv env
+    source env/bin/activate
+    ```
+
+* **Windows**
+
+    ```bash
+    cd play_with_12306
+    py -m venv env
+    .\env\Scripts\activate
+    ```
+
+#### Step3：安装依赖模块
+
+请使用以下命令来安装依赖的模块：
+
+```bash
+pip install -r requirements.txt
+```
+
+#### Step4: 修改配置文件
+
+在config目录下面的config.py文件中，修改下面的配置：
+
+* CAPTCHA_IDENTIFY：识别验证码方式，1表示手动，0表示自动
+* USERNAME：您的12306网站的用户名
+* PASSWORD：您的12306网站的密码
+* FROM_STATION：所购买票的始发站
+* END_STATION：所购买票的终点站
+* TRAIN_DATA：购票的出发日期
+* TRAIN_NUMBER：列车号
+* PASSENGERS：乘车人，可以添加多个，使用数组包裹，如["张三","李四"]
+* SEAT_TYPE：仅仅高铁支持的作为类型
+* CHOOSE_SEATS：仅仅高铁支持的座位编号
+
+#### Step5: 运行此项目
+
+运行此项目
+
+```bash
+python3 run.py
+```
+
+如果输出如下信息，证明您的本地抢票环境已经搭建完成：
+
+```bash
+Corrupt JPEG data: 12 extraneous bytes before marker 0xd9
+题目为: ['电子秤']
+选项1.热水袋
+选项2.拖把
+选项3.龙舟
+选项4.热水袋
+选项5.沙拉
+选项6.海苔
+选项7.电子秤
+选项8.路灯
+输入的图片验证码序号为：7
+验证码认证成功！
+```
+
+
+## 开发者参考文档
+
+待更新！
 
 ## 法律声明
 

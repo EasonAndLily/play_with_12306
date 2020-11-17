@@ -6,9 +6,10 @@ Keras==2.4.3
 numpy==1.19.3
 PyYAML==5.3.1
 requests==2.24.0
-scipy==1.5.4
+scipy==1.4.1
 selenium==3.141.0
 urllib3==1.25.11
 Pillow>=8.0
 opencv-python==4.4.0.44
 tensorflow==2.2
+h5py==2.10.0
