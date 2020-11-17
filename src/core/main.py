@@ -11,8 +11,8 @@ from src.core.auth.passenger import Passenger
 def login():
     captcha = Captcha()
     answer = captcha.run(config)
-    aut = BasicAuth(config)
-    aut.silde_passcode()
+    # aut = BasicAuth(config)
+    # aut.silde_passcode()
     # app_data = aut.get_apptk()
     # aut.validate_apptk(app_data)
 
