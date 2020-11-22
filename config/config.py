@@ -2,6 +2,9 @@
 # 识别验证码方式: [1: 手动, 0: 自动]
 CAPTCHA_IDENTIFY = 0
 
+# 登陆方式：[0: 调用API自动登陆，1: 浏览器自动登录 2：扫码登陆]
+LOGIN_METHOD = 1
+
 # 12306登陆用户名
 USERNAME = "test"
 
@@ -15,7 +18,7 @@ FROM_STATION = "北京"
 END_STATION = "上海"
 
 # 出发日期
-TRAIN_DATA = "2020-10-31"
+TRAIN_DATA = "2020-11-28"
 
 # 列车号
 TRAIN_NUMBER = "G111"
