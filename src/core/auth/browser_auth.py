@@ -5,6 +5,9 @@ from selenium.webdriver import ActionChains
 from src.core.auth.auth import Auth
 from selenium import webdriver
 
+from src.core.auth.captcha import Captcha
+from src.core.tools.utils import Utils
+
 
 class BrowserAuth(Auth):
     def __init__(self, config):
@@ -14,6 +17,8 @@ class BrowserAuth(Auth):
 
     def login(self):
         self.open_login_form_page()
+        self.fill_login_form()
+        self.select_captcha_answers()
 
     def open_login_form_page(self):
         self.driver.get(self.login_url)
@@ -22,5 +27,24 @@ class BrowserAuth(Auth):
         actions.move_to_element(login_form)
         actions.click(login_form)
         actions.perform()
-        time.sleep(10)
 
+    def fill_login_form(self):
+        username = self.driver.find_element_by_id("J-userName")
+        username.send_keys(self.username)
+        password = self.driver.find_element_by_id("J-password")
+        password.send_keys(self.password)
+
+    def select_captcha_answers(self):
+        captcha = self.driver.find_element_by_id("J-loginImg")
+        src = captcha.get_attribute('src')
+        base64_image = src[22:]
+        image_indexes = Captcha.verify_captcha_auto(base64_image)
+        answers = Utils.get_captcha_answer_points(image_indexes)
+        print(answers)
+        click_area = self.driver.find_element_by_id("J-loginImgArea")
+        actions = ActionChains(self.driver)
+        for point in answers:
+            actions.move_to_element_with_offset(click_area, point[0], point[1])
+            actions.click(click_area)
+            actions.perform()
+        time.sleep(10)
