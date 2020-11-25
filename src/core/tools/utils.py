@@ -26,21 +26,26 @@ class Utils(object):
     @classmethod
     def get_image_coordinate(cls):
         return {
-            1: "40,77",
-            2: "112,77",
-            3: "184,77",
-            4: "256,77",
-            5: "40,149",
-            6: "112,149",
-            7: "184,149",
-            8: "256,149"
+            1: (40, 77),
+            2: (112, 77),
+            3: (184, 77),
+            4: (256, 77),
+            5: (40, 149),
+            6: (112, 149),
+            7: (184, 149),
+            8: (256, 149)
         }
 
     @classmethod
     def get_captcha_answer(cls, image_numbers):
         image_coordinate = cls.get_image_coordinate()
-        answers = list(map(lambda num: image_coordinate.get(num), image_numbers))
+        answers = list(map(lambda num: ",".join(map(str, image_coordinate.get(num))), image_numbers))
         return ",".join(answers)
+
+    @classmethod
+    def get_captcha_answer_points(cls, image_numbers):
+        image_coordinate = cls.get_image_coordinate()
+        return list(map(lambda num: image_coordinate.get(num), image_numbers))
 
     @classmethod
     def save_captcha(cls, image, path, file_name):
