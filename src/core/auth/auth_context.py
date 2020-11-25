@@ -11,7 +11,7 @@ class AuthContext(object):
             1: BrowserAuth(config),
             2: QRCodeAuth(config)
         }
-        self.__auth = auth_list.get(config.LOGIN_METHOD, Auth(config))
+        self.__auth = auth_list.get(config.LOGIN_METHOD)
 
     def auth(self):
         self.__auth.login()
