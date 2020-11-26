@@ -19,6 +19,8 @@ class BrowserAuth(Auth):
         self.open_login_form_page()
         self.fill_login_form()
         self.select_captcha_answers()
+        self.submit_info()
+        time.sleep(100)
 
     def open_login_form_page(self):
         self.driver.get(self.login_url)
@@ -44,7 +46,13 @@ class BrowserAuth(Auth):
         click_area = self.driver.find_element_by_id("J-loginImgArea")
         actions = ActionChains(self.driver)
         for point in answers:
-            actions.move_to_element_with_offset(click_area, point[0], point[1])
-            actions.click(click_area)
-            actions.perform()
-        time.sleep(10)
+            actions.move_to_element(click_area)
+            x_offset = point[0] - 150
+            y_offset = point[1] - 96
+            actions.move_by_offset(x_offset, y_offset).click()
+        actions.perform()
+
+    def submit_info(self):
+        submit_btn = self.driver.find_element_by_id("J-login")
+        actions = ActionChains(self.driver)
+        actions.move_to_element(submit_btn).click().perform()
