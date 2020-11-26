@@ -18,7 +18,11 @@ class TestUtils(TestCase):
     def test_get_captcha_answer(self):
         image_numbers = [1, 3, 5]
         answers = Utils.get_captcha_answer(image_numbers)
-        self.assertEqual("40,77,184,77,40,149", answers)
+        self.assertEqual("30,67,174,67,30,139", answers)
+
+    def test_get_captcha_answer_points(self):
+        ansers = Utils.get_captcha_answer_points([1, 2])
+        self.assertEqual([(30, 67), (102, 67)], ansers)
 
     def test_get_root_path(self):
         root_path = Utils.get_root_path()
