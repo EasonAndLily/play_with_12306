@@ -89,6 +89,7 @@ pip install -r requirements.txt
 在config目录下面的config.py文件中，修改下面的配置：
 
 * CAPTCHA_IDENTIFY：识别验证码方式，1表示手动，0表示自动
+* LOGIN_METHOD：认证方式，默认为1,可选范围为[0: 调用API自动登陆，1: 浏览器自动登录 2：扫码登陆]
 * USERNAME：您的12306网站的用户名
 * PASSWORD：您的12306网站的密码
 * FROM_STATION：所购买票的始发站
@@ -98,6 +99,11 @@ pip install -r requirements.txt
 * PASSENGERS：乘车人，可以添加多个，使用数组包裹，如["张三","李四"]
 * SEAT_TYPE：仅仅高铁支持的作为类型
 * CHOOSE_SEATS：仅仅高铁支持的座位编号
+
+##### Step4.1: 配置浏览器自动登陆方式【如果配置LOGIN_METHOD为非1， 请忽略此步骤】
+
+如果您在`config.py`里面配置了LOGIN_METHOD为1，则此项目使用selenium来启动浏览器登陆认证，相关的配置请参考这里：
+* [浏览器登陆认证配置说明](./doc/browser_auth_config.md)
 
 #### Step5: 运行此项目
 
