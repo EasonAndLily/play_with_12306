@@ -24,14 +24,22 @@ class BrowserAuth(Auth):
         self.submit_info()
         time.sleep(1)
         self.slider_verify()
-        time.sleep(10)
+        time.sleep(2)
+
+    def save_cookies(self):
+        cookies = self.driver.get_cookies()
+        root_path = Utils.get_root_path()
+        path = root_path + "/config"
+        Utils.save_json_data_to_file(cookies, path, "cookies.json")
         self.driver.close()
+        self.driver.quit()
 
     @staticmethod
     def generate_driver():
         options = webdriver.ChromeOptions()
         options.add_argument(
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36')
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) '
+            'Chrome/87.0.4280.67 Safari/537.36')
         options.add_argument("--no-sandbox")
         # options.add_argument("--headless") // if need run without window, use it
         driver = webdriver.Chrome(options=options)
@@ -57,7 +65,6 @@ class BrowserAuth(Auth):
         base64_image = src[22:]
         image_indexes = Captcha.verify_captcha_auto(base64_image)
         answers = Utils.get_captcha_answer_points(image_indexes)
-        print(answers)
         click_area = self.driver.find_element_by_id("J-loginImgArea")
         actions = ActionChains(self.driver)
         for point in answers:
