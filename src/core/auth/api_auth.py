@@ -6,4 +6,7 @@ class APIAuth(Auth):
         super().__init__(config)
 
     def login(self):
-        print("API login")
+        pass
+
+    def save_cookies(self):
+        pass

@@ -10,3 +10,7 @@ class Auth(ABC):
     @abstractmethod
     def login(self):
         pass
+
+    @abstractmethod
+    def save_cookies(self):
+        pass

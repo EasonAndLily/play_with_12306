@@ -1,0 +1,68 @@
+[
+  {
+    "domain": "kyfw.12306.cn",
+    "httpOnly": false,
+    "name": "uKey",
+    "path": "/",
+    "secure": false,
+    "value": "43b99e7aab02be0c5ecefc52a8e6bd7661427a004be01db22f07155cea6b91da"
+  },
+  {
+    "domain": ".12306.cn",
+    "expiry": 1924905600,
+    "httpOnly": false,
+    "name": "RAIL_DEVICEID",
+    "path": "/",
+    "secure": false,
+    "value": "T6dwHDqxjAGpKSeyzrjcaGo3Zne9Q_cgMmOUOVDnqaXplQr6mKsN5ySD6qzbRbscS12md0P3eDRGJEvUlTxqu89Mf7-vDMQ0DAQcDGkZliW49doKqKbqNAV-2YHqBr3yPoQMDtWaMGhEiQ4ZjWSN3VGVp3kXeZ-7"
+  },
+  {
+    "domain": "kyfw.12306.cn",
+    "httpOnly": false,
+    "name": "BIGipServerpool_passport",
+    "path": "/",
+    "secure": false,
+    "value": "182714890.50215.0000"
+  },
+  {
+    "domain": ".12306.cn",
+    "expiry": 1693058161,
+    "httpOnly": false,
+    "name": "RAIL_EXPIRATION",
+    "path": "/",
+    "secure": false,
+    "value": "1606954393586"
+  },
+  {
+    "domain": "kyfw.12306.cn",
+    "httpOnly": false,
+    "name": "route",
+    "path": "/",
+    "secure": false,
+    "value": "6f50b51faa11b987e576cdb301e545c4"
+  },
+  {
+    "domain": "kyfw.12306.cn",
+    "httpOnly": false,
+    "name": "tk",
+    "path": "/otn",
+    "secure": false,
+    "value": "MYAS0XV2gOSNP9q97afEZPw_ecHhEkwbyPQ3ImfUjxw27l1l0"
+  },
+  {
+    "domain": "kyfw.12306.cn",
+    "httpOnly": false,
+    "name": "BIGipServerotn",
+    "path": "/",
+    "secure": false,
+    "value": "1274020362.64545.0000"
+  },
+  {
+    "domain": "kyfw.12306.cn",
+    "httpOnly": false,
+    "name": "JSESSIONID",
+    "path": "/otn",
+    "secure": false,
+    "value": "1D12EE0081E2B8B4CFDCB9A29A010C11"
+  }
+]

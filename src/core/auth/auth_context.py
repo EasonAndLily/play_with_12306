@@ -1,5 +1,4 @@
 from src.core.auth.api_auth import APIAuth
-from src.core.auth.auth import Auth
 from src.core.auth.browser_auth import BrowserAuth
 from src.core.auth.qr_code_auth import QRCodeAuth
 
@@ -15,3 +14,4 @@ class AuthContext(object):
 
     def auth(self):
         self.__auth.login()
+        self.__auth.save_cookies()

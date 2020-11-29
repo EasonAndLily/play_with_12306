@@ -6,4 +6,7 @@ class QRCodeAuth(Auth):
         super().__init__(config)
 
     def login(self):
-        print("qr code login")
+        pass
+
+    def save_cookies(self):
+        pass
