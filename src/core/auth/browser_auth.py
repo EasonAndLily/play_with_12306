@@ -1,10 +1,6 @@
-import time
-
 from selenium.webdriver import ActionChains
-
 from src.core.auth.auth import Auth
 from selenium import webdriver
-
 from src.core.auth.captcha import Captcha
 from src.core.tools.utils import Utils
 
@@ -22,15 +18,17 @@ class BrowserAuth(Auth):
         self.fill_login_form()
         self.select_captcha_answers()
         self.submit_info()
-        time.sleep(1)
+        self.driver.implicitly_wait(3)
         self.slider_verify()
-        time.sleep(2)
+        self.driver.implicitly_wait(3)
+        print("Login successfully!")
 
     def save_cookies(self):
         cookies = self.driver.get_cookies()
         root_path = Utils.get_root_path()
         path = root_path + "/config"
         Utils.save_json_data_to_file(cookies, path, "cookies.json")
+        print("Save cookies to file cookies.json")
         self.driver.close()
         self.driver.quit()
 
