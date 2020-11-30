@@ -1,23 +1,14 @@
 # -*- coding: UTF-8 -*-
-from src.core.auth.captcha import Captcha
 from src.core.auth.auth_context import AuthContext
-from src.core.auth.basic import BasicAuth
 from config import config
 from src.core.ticket.order import Order
 from src.core.tools.init_dc import InitDc
 from src.core.auth.passenger import Passenger
-from src.core.auth.browser_auth import BrowserAuth
 
 
 def login():
     context = AuthContext(config)
     context.auth()
-    # captcha = Captcha()
-    # answer = captcha.run(config)
-    # aut = BasicAuth(config)
-    # aut.silde_passcode()
-    # app_data = aut.get_apptk()
-    # aut.validate_apptk(app_data)
 
 
 def generate_order():
@@ -39,4 +30,4 @@ def generate_order():
 
 def set_up():
     login()
-    # generate_order()
+    generate_order()

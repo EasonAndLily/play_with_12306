@@ -3,6 +3,7 @@ from src.core.auth.auth import Auth
 from selenium import webdriver
 from src.core.auth.captcha import Captcha
 from src.core.tools.utils import Utils
+from src.core.tools.cookies import CookieUtils
 
 
 class BrowserAuth(Auth):
@@ -21,14 +22,12 @@ class BrowserAuth(Auth):
         self.driver.implicitly_wait(3)
         self.slider_verify()
         self.driver.implicitly_wait(3)
-        print("Login successfully!")
+        print("登陆成功!")
 
     def save_cookies(self):
         cookies = self.driver.get_cookies()
-        root_path = Utils.get_root_path()
-        path = root_path + "/config"
-        Utils.save_json_data_to_file(cookies, path, "cookies.json")
-        print("Save cookies to file cookies.json")
+        CookieUtils.save_cookies(cookies)
+        print("保存当前的cookies到文件cookies.json中！")
         self.driver.close()
         self.driver.quit()
 
