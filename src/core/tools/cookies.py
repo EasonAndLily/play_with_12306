@@ -1,27 +1,21 @@
-from http import cookiejar
-
-import requests
-import urllib3
+from requests.cookies import RequestsCookieJar
 
 from .utils import Utils
 
 
 class CookieUtils(object):
-    def __init__(self):
-        urllib3.disable_warnings()
-        self.__cookie = cookiejar.LWPCookieJar(Utils.get_root_path() + '/config/cookie.txt')
+    @staticmethod
+    def save_cookies(cookies):
+        root_path = Utils.get_root_path()
+        path = root_path + "/config"
+        Utils.save_json_data_to_file(cookies, path, "cookies.json")
 
-    def save_cookie(self, **kwargs):
-        requests.utils.cookiejar_from_dict({k: v for k, v in kwargs.items()}, self.__cookie)
-        self.__cookie.save(ignore_discard=True, ignore_expires=True)
-
-    def load_cookie(self, session):
-        self.__cookie.load(ignore_discard=True, ignore_expires=True)
-        session.cookies = requests.utils.cookiejar_from_dict(requests.utils.dict_from_cookiejar(self.__cookie))
-
-    def clear_local_cookie(self, session, key=None):
-        session.cookies.set(key, None) if key else session.cookies.clear()
-
-    def clear_session_cookie(self):
-        self.__cookie.clear()
-        self.__cookie.save()
+    @staticmethod
+    def load_cookies(session):
+        jar = RequestsCookieJar()
+        root_path = Utils.get_root_path()
+        path = root_path + "/config"
+        cookies = Utils.get_json_data_from_file(path, "cookies.json")
+        for cookie in cookies:
+            jar.set(cookie['name'], cookie['value'])
+        session.cookies = jar
