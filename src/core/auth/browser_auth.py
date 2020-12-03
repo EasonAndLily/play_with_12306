@@ -1,3 +1,5 @@
+import time
+
 from selenium.webdriver import ActionChains
 from src.core.auth.auth import Auth
 from selenium import webdriver
@@ -11,9 +13,12 @@ class BrowserAuth(Auth):
         super().__init__(config)
         self.login_url = "https://kyfw.12306.cn/otn/resources/login.html"
         self.driver = BrowserAuth.generate_driver()
+        self.cookies = {}
 
     def login(self):
         self.driver.get(self.login_url)
+        self.cookies = self.driver.get_cookies()
+        self.generate_cookies()
         self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
         self.open_login_form_page()
         self.fill_login_form()
@@ -25,11 +30,17 @@ class BrowserAuth(Auth):
         print("登陆成功!")
 
     def save_cookies(self):
-        cookies = self.driver.get_cookies()
-        CookieUtils.save_cookies(cookies)
+        time.sleep(3)
+        self.generate_cookies()
+        CookieUtils.save_cookies(self.cookies)
         print("保存当前的cookies到文件cookies.json中！")
         self.driver.close()
         self.driver.quit()
+
+    def generate_cookies(self):
+        for cookie in self.driver.get_cookies():
+            if not any(ele['name'] == cookie['name'] for ele in self.cookies):
+                self.cookies.append(cookie)
 
     @staticmethod
     def generate_driver():
@@ -49,6 +60,7 @@ class BrowserAuth(Auth):
         actions.move_to_element(login_form)
         actions.click(login_form)
         actions.perform()
+        self.generate_cookies()
 
     def fill_login_form(self):
         username = self.driver.find_element_by_id("J-userName")
@@ -75,6 +87,7 @@ class BrowserAuth(Auth):
         submit_btn = self.driver.find_element_by_id("J-login")
         actions = ActionChains(self.driver)
         actions.move_to_element(submit_btn).click().perform()
+        self.generate_cookies()
 
     def slider_verify(self):
         slider = self.driver.find_element_by_id("nc_1_n1z")
