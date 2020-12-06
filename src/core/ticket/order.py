@@ -2,13 +2,12 @@
 import sys
 import time
 
-from config import config
 from src.core.tools.api_request import api
 from .ticket import Ticket
 
 
 class Order(object):
-    def __init__(self):
+    def __init__(self, config):
         self.__train_date = config.TRAIN_DATA
         self.__from_station_name = config.FROM_STATION
         self.__to_station_name = config.END_STATION
@@ -34,12 +33,11 @@ class Order(object):
         }
         res = api.post(self.__submit_url, data=data)
         result = res.json()
-        if result["status"] and result['data'] == 'N':
+        if result["status"] and result['data'] == '0':
             print("订单提交成功！")
         else:
             print(result)
-            print("订单提交失败！系统自动退出...")
-            sys.exit(0)
+            raise Exception("订单提交失败！系统自动退出...")
 
     def submit_order(self, init_params):
         params = {
