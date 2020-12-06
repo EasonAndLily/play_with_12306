@@ -12,10 +12,7 @@ def login():
 
 
 def generate_order():
-    print("您预订的车次为：" + config.TRAIN_NUMBER + " 预订时间为：" + config.TRAIN_DATA)
-    print("出发车站为：" + config.FROM_STATION)
-    print("终点车站为：" + config.END_STATION)
-    order = Order()
+    order = Order(config)
     order.ready_order()
     init_params = InitDc.get_params()
     passenger = Passenger(init_params["REPEAT_SUBMIT_TOKEN"])
@@ -30,4 +27,4 @@ def generate_order():
 
 def set_up():
     login()
-    generate_order()
+    # generate_order()
