@@ -27,4 +27,4 @@ def generate_order():
 
 def set_up():
     login()
-    # generate_order()
+    generate_order()

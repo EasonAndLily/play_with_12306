@@ -2,7 +2,7 @@
 import sys
 import time
 
-from src.core.tools.api_request import api
+from src.core.tools.api_request import API
 from .ticket import Ticket
 
 
@@ -18,6 +18,7 @@ class Order(object):
         self.__check_order_for_queue = "https://kyfw.12306.cn/otn/confirmPassenger/resultOrderForDcQueue"
         self.__not_complete_order = "https://kyfw.12306.cn/otn/queryOrder/queryMyOrderNoComplete"
         self.__ticket = Ticket()
+        self.api = API()
 
     def ready_order(self):
         secret = self.__ticket.get_train_secret(self.__train_number)
@@ -31,7 +32,7 @@ class Order(object):
             "query_to_station_name": self.__to_station_name,
             "undefined": ""
         }
-        res = api.post(self.__submit_url, data=data)
+        res = self.api.post(self.__submit_url, data=data)
         result = res.json()
         if result["status"] and result['data'] == '0':
             print("订单提交成功！")
@@ -54,7 +55,7 @@ class Order(object):
             "_json_att": "",
             "REPEAT_SUBMIT_TOKEN": init_params["REPEAT_SUBMIT_TOKEN"]
         }
-        res = api.post(self.__check_order_info, data=params)
+        res = self.api.post(self.__check_order_info, data=params)
         result = res.json()
         if result["status"] and result["data"]["submitStatus"]:
             print("检查订单信息成功！")
@@ -69,7 +70,7 @@ class Order(object):
     def get_request(self, submit_token):
         url = self.__get_order_info_url + "?random=" + str(
             int(time.time() * 1000)) + '&tourFlag=dc&_json_att=&REPEAT_SUBMIT_TOKEN=' + submit_token
-        res = api.get(url)
+        res = self.api.get(url)
         result = res.json()
         if result["status"] and result["data"]["queryOrderWaitTimeStatus"]:
             print("等待提交订单信息成功!")
@@ -83,7 +84,7 @@ class Order(object):
         params = {
             "_json_att": ""
         }
-        res = api.post(self.__not_complete_order, data=params)
+        res = self.api.post(self.__not_complete_order, data=params)
         result = res.json()
         if result["status"]:
             return result["data"]["orderCacheDTO"]
@@ -96,7 +97,7 @@ class Order(object):
         params = {
             "_json_att": ""
         }
-        res = api.post(self.__not_complete_order, data=params)
+        res = self.api.post(self.__not_complete_order, data=params)
         result = res.json()
         if result["status"]:
             return result["data"]["orderDBList"]

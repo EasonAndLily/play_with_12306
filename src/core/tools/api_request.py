@@ -23,6 +23,7 @@ class API(object):
 
     def post(self, url, data):
         try:
+            # print(dict(self.__session.cookies))
             response = self.__session.post(url, data=data, headers=self.__headers, timeout=self.__timeout)
             if response.status_code == 200:
                 return response
