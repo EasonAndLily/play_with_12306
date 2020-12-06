@@ -1,7 +1,7 @@
 from PIL import Image
 from src.core.tools import verify_code
 from src.core.tools.utils import Utils
-from src.core.tools.api_request import api
+import requests
 
 
 class Captcha(object):
@@ -10,7 +10,7 @@ class Captcha(object):
         self.__check_captcha_url = "https://kyfw.12306.cn/passport/captcha/captcha-check"
 
     def get_captcha(self):
-        res = api.get(self.__get_captcha_url)
+        res = requests.get(self.__get_captcha_url)
         result = res.json()
         if "生成验证码成功" != result['result_message']:
             raise Exception("获取验证码失败，请确保您的计算机可以联网！")
@@ -22,7 +22,7 @@ class Captcha(object):
             "rand": "sjrand",
             "login_site": "E"
         }
-        res = api.post(self.__check_captcha_url, data=params)
+        res = requests.post(self.__check_captcha_url, data=params)
         return res.json()["result_code"] == "4"
 
     def run(self, config):

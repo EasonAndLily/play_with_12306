@@ -3,7 +3,7 @@ import os
 import re
 
 from .utils import Utils
-from .api_request import api
+from .api_request import API
 
 
 class Station(object):
@@ -26,7 +26,7 @@ class Station(object):
     @classmethod
     def request_stations(cls):
         url = "https://kyfw.12306.cn/otn/resources/js/framework/station_name.js?station_version=1.8971"
-        response = api.get(url)
+        response = API().get(url)
         data = re.findall(r'([\u4e00-\u9fa5]+)\|([A-Z]+)', response.text)
         return dict(data)
 
