@@ -4,12 +4,13 @@ import requests
 import sys
 
 from config import config
-from src.core.tools.api_request import api
+from src.core.tools.api_request import API
 from src.core.tools.station import Station
 
 
 class Ticket(object):
     def __init__(self):
+        self.api = API()
         self.__station = Station()
         self.__from_station = self.__station.get_station_key_by_values(config.FROM_STATION)
         self.__end_station = self.__station.get_station_key_by_values(config.END_STATION)
@@ -22,7 +23,7 @@ class Ticket(object):
         url = self.__query_left_tickets_url + "?leftTicketDTO.train_date=" + self.__train_date + \
               "&leftTicketDTO.from_station=" + \
               self.__from_station + "&leftTicketDTO.to_station=" + self.__end_station + "&purpose_codes=ADULT"
-        res = api.get(url)
+        res = self.api.get(url)
         data = res.json()
         if data["httpstatus"] == 200:
             return self.parse_string_array_to_tickets(data["data"]["result"], data["data"]["map"])
@@ -79,7 +80,7 @@ class Ticket(object):
             "_json_att": "",
             "REPEAT_SUBMIT_TOKEN": init_params["REPEAT_SUBMIT_TOKEN"]
         }
-        res = api.post(self.__query_queue_count_url, data=params)
+        res = self.api.post(self.__query_queue_count_url, data=params)
         result = res.json()
         if result["status"]:
             print("您所选的座位还剩余" + result["data"]["ticket"] + "张车票, 当前排队人数为：" + result["data"]["count"])
@@ -104,7 +105,7 @@ class Ticket(object):
             "_json_att": "",
             "REPEAT_SUBMIT_TOKEN": init_params["REPEAT_SUBMIT_TOKEN"]
         }
-        res = api.post(self.__choose_seats_url, data=params)
+        res = self.api.post(self.__choose_seats_url, data=params)
         result = res.json()
         if result["status"] and result["data"]["submitStatus"]:
             print("选择座位成功！")

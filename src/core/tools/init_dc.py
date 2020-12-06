@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 import re
 
-from .api_request import api
+from .api_request import API
 
 
 class InitDc(object):
@@ -11,7 +11,7 @@ class InitDc(object):
         data = {
             "_json_att": ""
         }
-        res = api.post(url, data=data)
+        res = API().post(url, data=data)
         return cls.parse_html_data(res.text)
 
     @classmethod
