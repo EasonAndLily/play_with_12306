@@ -18,8 +18,11 @@ class Passenger(object):
         res = self.api.post(self.__get_passenger_url, data=data)
         result = res.json()
         normal_passengers = result["data"]["normal_passengers"]
-        passengers = filter(lambda passenger: passenger["passenger_name"] in config.PASSENGERS, normal_passengers)
-        return list(passengers)
+        if normal_passengers is not None:
+            passengers = filter(lambda passenger: passenger["passenger_name"] in config.PASSENGERS, normal_passengers)
+            return list(passengers)
+        else:
+            raise Exception(result["data"]["exMsg"])
 
     def get_passengers_str(self):
         passengers = []
