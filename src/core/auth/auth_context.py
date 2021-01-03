@@ -17,3 +17,4 @@ class AuthContext(object):
         CookieUtils.clear_cookies()
         self.__auth.login()
         self.__auth.save_cookies()
+        CookieUtils.check_cookies()
