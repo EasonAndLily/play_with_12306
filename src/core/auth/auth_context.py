@@ -1,6 +1,7 @@
 from src.core.auth.api_auth import APIAuth
 from src.core.auth.browser_auth import BrowserAuth
 from src.core.auth.qr_code_auth import QRCodeAuth
+from src.core.tools.cookies import CookieUtils
 
 
 class AuthContext(object):
@@ -13,5 +14,6 @@ class AuthContext(object):
         self.__auth = auth_list.get(config.LOGIN_METHOD)
 
     def auth(self):
+        CookieUtils.clear_cookies()
         self.__auth.login()
         self.__auth.save_cookies()

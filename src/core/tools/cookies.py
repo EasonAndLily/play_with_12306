@@ -19,3 +19,9 @@ class CookieUtils(object):
         for cookie in cookies:
             jar.set(cookie['name'], cookie['value'])
         session.cookies = jar
+
+    @staticmethod
+    def clear_cookies():
+        root_path = Utils.get_root_path()
+        path = root_path + "/config"
+        open(path + "/cookies.json", "w").close()
