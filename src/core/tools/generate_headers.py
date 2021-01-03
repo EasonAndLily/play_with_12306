@@ -17,6 +17,8 @@ class GenerateHeaders(object):
             "Host": "kyfw.12306.cn",
             "Origin": "https://kyfw.12306.cn",
             "Referer": "https://kyfw.12306.cn/otn/resources/login.html",
+            "sec-ch-ua": '"Google Chrome";v="87", " Not;A Brand";v="99", "Chromium";v="87"',
+            "sec-ch-ua-mobile": "?0"
         }
 
     @classmethod

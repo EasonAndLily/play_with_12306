@@ -26,7 +26,7 @@ class CookieUtils(object):
     @classmethod
     def check_cookies(cls):
         cookies_keys = {"uKey", "tk", "JSESSIONID", "RAIL_EXPIRATION", "RAIL_DEVICEID",
-                           "route", "BIGipServerotn", "BIGipServerpassport", "BIGipServerpool_passport"}
+                           "route", "BIGipServerotn", "BIGipServerpassport"}
         cookies = Utils.get_json_data_from_file(cls.cookie_file_path, cls.cookie_file_name)
         all_keys = set((cookie['name'] for cookie in cookies))
         missing_cookies = cookies_keys.difference(all_keys)
