@@ -15,7 +15,7 @@ class Ticket(object):
         self.__from_station = self.__station.get_station_key_by_values(config.FROM_STATION)
         self.__end_station = self.__station.get_station_key_by_values(config.END_STATION)
         self.__train_date = config.TRAIN_DATA
-        self.__query_left_tickets_url = "https://kyfw.12306.cn/otn/leftTicket/query"
+        self.__query_left_tickets_url = "https://kyfw.12306.cn/otn/leftTicket/queryT"
         self.__query_queue_count_url = "https://kyfw.12306.cn/otn/confirmPassenger/getQueueCount"
         self.__choose_seats_url = "https://kyfw.12306.cn/otn/confirmPassenger/confirmSingleForQueue"
 
