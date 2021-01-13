@@ -23,9 +23,9 @@ class BrowserAuth(Auth):
         self.fill_login_form()
         self.select_captcha_answers()
         self.submit_info()
-        time.sleep(2)
+        time.sleep(1)
         self.slider_verify()
-        time.sleep(3)
+        time.sleep(5)
         self.cookies = self.driver.get_cookies()
         print("登陆成功!")
 
