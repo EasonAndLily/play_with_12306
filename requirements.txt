@@ -8,7 +8,7 @@ PyYAML==5.3.1
 requests==2.24.0
 scipy==1.4.1
 selenium==3.141.0
-urllib3==1.25.11
+urllib3==1.26.5
 Pillow>=8.0
 opencv-python==4.4.0.44
 tensorflow==2.2
